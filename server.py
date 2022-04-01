@@ -157,25 +157,25 @@ async def index(request):
           </label>
           </div>
           <div class="background">
-            <label class="switch" >
-            <input type="checkbox" >
+            <label class="switch">
+            <input type="checkbox">
             <span class="slider round" id ="b"></span>
           </label>
           </div>
           <div class="background">
-            <label class="switch" >
-            <input type="checkbox" ">
+            <label class="switch">
+            <input type="checkbox">
             <span class="slider round" id = "c"></span>
           </label>
           </div>
           <div class="background">
-            <label class="switch" ">
+            <label class="switch" >
             <input type="checkbox" >
             <span class="slider round" id = "d"></span>
           </label>
           </div>
           <div class="background">
-            <label class="switch" ">
+            <label class="switch" >
             <input type="checkbox">
             <span class="slider round"  id = "e"></span>
           </label>
@@ -187,7 +187,7 @@ async def index(request):
           </label>
           </div></nav>
         <main>
-            <video autoplay playsinline controls></video> <audio autoplay></audio>
+            <video autoplay playsinline controls width="100%"></video> <audio autoplay></audio>
         </main>
         <footer><button class="switch" id="left">LEFT</button>
           <button class="switch" id="right">RIGHT</button>
