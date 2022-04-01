@@ -1,61 +1,13 @@
 from aiohttp import web
-import os
+
 routes = web.RouteTableDef()
-
-from rtcbot import RTCConnection, getRTCBotJS, CVCamera
-
-camera = CVCamera()
+import os
+from rtcbot import Websocket, getRTCBotJS
 
 
-class ConnectionHandler:
-    active_connections = []
 
-    def __init__(self):
-        self.conn = RTCConnection()
-
-        # Subscribe to the video frames - each connection gets its own subscription
-        global camera
-        self.videoSubscription = camera.subscribe()
-        self.conn.video.putSubscription(self.videoSubscription)
-
-        # Perform cleanup when the connection is closed
-        self.conn.onClose(self.close)
-
-        # Add this connection to the list of active connections
-        ConnectionHandler.active_connections.append(self)
-
-    def close(self):
-        # When done, unsubscribe from the video feed
-        global camera
-        camera.unsubscribe(self.videoSubscription)
-
-        # Remove from list of active connections
-        ConnectionHandler.active_connections.remove(self)
-
-    async def getLocalDescription(self, clientOffer):
-        # Pass the connection setup result
-        return await self.conn.getLocalDescription(clientOffer)
-
-    @staticmethod
-    async def cleanup():
-        # Close all active connections, making sure to use an array copy [:]
-        # since closing removes the item from the array!
-        for c in ConnectionHandler.active_connections[:]:
-            await c.conn.close()
-
-
-# This sets up the connection
-@routes.post("/connect")
-async def connect(request):
-    clientOffer = await request.json()
-    conn = ConnectionHandler()  # Our ConnectionHandler class!
-    serverResponse = await conn.getLocalDescription(clientOffer)
-    return web.json_response(serverResponse)
-
-
-async def cleanup(app=None):
-    await ConnectionHandler.cleanup()  # When the app is closed, close all connections
-    camera.close()
+# Websocket connection to the robot
+ws = None
 
 
 # Serve the RTCBot javascript library at /rtcbot.js
@@ -64,7 +16,31 @@ async def rtcbotjs(request):
     return web.Response(content_type="application/javascript", text=getRTCBotJS())
 
 
-# Serve the webpage!
+# Called by the browser to set up a connection
+@routes.post("/connect")
+async def connect(request):
+    global ws
+    if ws is None:
+        raise web.HTTPInternalServerError("There is no robot connected")
+    clientOffer = await request.json()
+
+    # Send the offer to the robot, and receive its response
+    ws.put_nowait(clientOffer)
+    robotResponse = await ws.get()
+
+    return web.json_response(robotResponse)
+
+
+@routes.get("/ws")
+async def websocket(request):
+    global ws
+    ws = Websocket(request)
+    print("Robot Connected")
+    await ws  # Wait until the websocket closes
+    print("Robot disconnected")
+    return ws.ws
+
+
 @routes.get("/")
 async def index(request):
     return web.Response(
@@ -72,11 +48,11 @@ async def index(request):
         text="""
     <html>
         <head>
-            <title>RTCBot: Video</title>
+            <title>RTCBot: Remote Video</title>
             <script src="/rtcbot.js"></script>
         </head>
         <body style="text-align: center;padding-top: 30px;">
-            <video autoplay playsinline muted controls></video>
+            <video autoplay playsinline controls></video> <audio autoplay></audio>
             <p>
             Open the browser's developer tools to see console messages (CTRL+SHIFT+C)
             </p>
@@ -110,7 +86,18 @@ async def index(request):
     )
 
 
+async def cleanup(app=None):
+    global ws
+    if ws is not None:
+        c = ws.close()
+        if c is not None:
+            await c
+
+
 app = web.Application()
 app.add_routes(routes)
 app.on_shutdown.append(cleanup)
+
 web.run_app(app, path="0.0.0.0", port=os.environ["PORT"])
+# web.run_app(app)
+
