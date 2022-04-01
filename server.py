@@ -223,7 +223,7 @@ async def index(request):
 
         </script>
         <script>
-            const socket = new WebSocket('ws://76.102.182.244:8765/');
+            const socket = new WebSocket('wss://yardbots.herokuapp.com/');
         
         // Connection opened
         socket.addEventListener('open', function (event) {
