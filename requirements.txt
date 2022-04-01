@@ -1,4 +1,4 @@
 aiohttp
 rtcbot
 argparse
-opencv-contrib-python
+opencv-contrib-python-headless
