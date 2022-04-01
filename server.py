@@ -227,7 +227,7 @@ async def index(request):
         
         // Connection opened
         socket.addEventListener('open', function (event) {
-            socket.send('Hello Server!');
+            socket.send('c');
         });
             var process_touchstart = (e) => {
                 socket.send(e.srcElement.id)
@@ -242,6 +242,8 @@ async def index(request):
         for (var i=0; i < switches.length; i++) {
             switches[i].addEventListener('touchstart', process_touchstart, false);
             switches[i].addEventListener('touchend', process_touchend, false);
+                        switches[i].addEventListener('mousedown', process_touchstart, false)
+            switches[i].addEventListener('mouseup', process_touchend, false)
         
         }
         </script>
