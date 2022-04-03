@@ -2,3 +2,5 @@
 template.html
 server-mulit-buggy.py
 server copy.py
+chassis.py
+botwithcontrol.py
