@@ -111,10 +111,10 @@ async def index(request):
         <video autoplay playsinline controls width = "100%"></video> <audio autoplay></audio>
             </div>
         
-                <button class="arrow up ctrl" style="top:40px;left:55px;z-index:1;"></i> 
-                <button class="arrow left ctrl" style="top:60px;left:30px;z-index:1;"></button> 
-                <button class="arrow right ctrl" style="top:60px;left:80px;z-index:1;"></button> 
-                <button class="arrow down ctrl" style="top:80px;left:55px;z-index:1;"></button>  
+                <button id='forward' class="arrow up ctrl" style="top:40px;left:55px;z-index:1;"></i> 
+                <button id='left' class="arrow left ctrl" style="top:60px;left:30px;z-index:1;"></button> 
+                <button id='right'class="arrow right ctrl" style="top:60px;left:80px;z-index:1;"></button> 
+                <button id = 'back' class="arrow down ctrl" style="top:80px;left:55px;z-index:1;"></button>  
         </div>
         <p id="gamepad-info">Waiting for Gamepad.</p>
         
