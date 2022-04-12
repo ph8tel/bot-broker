@@ -194,198 +194,197 @@ async def index(request):
     return web.Response(
         content_type="text/html",
         text="""
-<html>
-    <head>
-        <title>Joes Yardbot</title>
-        <script src="/rtcbot.js"></script>
-        <style>
-            body {
-              background-color:#E7E9EB;
-            }
-            #myDIV {
-              width:100%;
-              position:absolute;
-              background-color:#FFFFFF;
-            }
-            #myDIV div{
-              /* width:100px;
-              height:100px; */
-              position:absolute;
-              /* background-color:yellow; */
-              border:1px solid;
-              opacity:0.5;
-              margin:auto;
-            }
-            #myBox {
-              position:absolute;
-              opacity:1!important;
-              z-index: 0;
-            }
-            .arrow {
-              border: solid black;
-              border-width: 0 3px 3px 0;
-              display: inline-block;
-              padding: 3px;
-              position:absolute;
-            }
-            
-            .right {
-              transform: rotate(-45deg);
-              -webkit-transform: rotate(-45deg);
-            }
-            
-            .left {
-              transform: rotate(135deg);
-              -webkit-transform: rotate(135deg);
-            }
-            
-            .up {
-              transform: rotate(-135deg);
-              -webkit-transform: rotate(-135deg);
-            }
-            
-            .down {
-              transform: rotate(45deg);
-              -webkit-transform: rotate(45deg);
-            }
-            .arrow {
-                margin:auto;
-            }
-            </style>
-    </head>
-    <body>
-        <div id="myDIV">
-            <div id="myBox">
-        <video autoplay playsinline controls width = "100%"></video> <audio autoplay></audio>
-            </div>
-        
-                <button id='forward' class="arrow up ctrl" style="top:40px;left:55px;z-index:1;"></i> 
-                <button id='left' class="arrow left ctrl" style="top:60px;left:30px;z-index:1;"></button> 
-                <button id='right'class="arrow right ctrl" style="top:60px;left:80px;z-index:1;"></button> 
-                <button id = 'back' class="arrow down ctrl" style="top:80px;left:55px;z-index:1;"></button>  
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yardbot</title>
+    <style>
+        *,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  background: #fff;
+}
+
+div {
+  padding: 0;
+  margin: 0;
+  width: 3em;
+  height: 3em;
+  position: absolute;
+}
+
+.wrapper {
+  /* position: absolute; */
+  height: 9em;
+  /* margin: auto; */
+  top: 100px;
+  bottom: 0;
+  left: 100px;
+  right: 0;
+  filter: drop-shadow(7px 5px 5px #777);
+  float:right;
+
+}
+
+.center {
+  /* z-index: 2; */
+  top: 3em;
+}
+
+.center-circle {
+  position: static;
+/*   background: #222532; */
+  background: #777;
+/*   background: #90E4FF; */
+/*   background: #7FFFB5; */
+  border-radius: 100%;
+  margin: auto;
+  width: 75%;
+  height: 75%;
+  z-index: 3;
+}
+
+.up,
+.right,
+.down,
+.left,
+.center {
+  display: flex;
+  background: #000;
+  padding: 12px;
+  border: 1px solid #222;
+/*   background: #51D6FF; */
+/*   background: #37FF8B; */
+}
+
+.right {
+  top: 3em;
+  left: 3em;
+}
+
+.left {
+  top: 3em;
+  right: 3em;
+}
+
+.down {
+  top: 6em;
+}
+
+.up-triangle {
+  position: absolute;
+  bottom: 16px;
+  right: 8px;
+  margin: auto;
+  width: 65%;
+  height: 65%;
+  border-left: solid 15px transparent; 
+  border-right: solid 15px transparent; 
+  border-bottom: solid 20px #777; 
+}
+
+.right-triangle {
+  position: absolute;
+  bottom: 8px;
+  right: 0px;
+  margin: auto;
+  width: 65%;
+  height: 65%;
+  border-left: solid 15px transparent; 
+  border-right: solid 15px transparent; 
+  border-bottom: solid 20px #777;
+  transform: rotate(90deg);
+}
+
+.down-triangle {
+  position: absolute;
+  bottom: 0px;
+  right: 8px;
+  margin: auto;
+  width: 65%;
+  height: 65%;
+  border-left: solid 15px transparent; 
+  border-right: solid 15px transparent; 
+  border-bottom: solid 20px #777;
+  transform: rotate(180deg);
+}
+
+.left-triangle {
+  position: absolute;
+  bottom: 8px;
+  left: 1px;
+  margin: auto;
+  width: 65%;
+  height: 65%;
+  border-left: solid 15px transparent; 
+  border-right: solid 15px transparent; 
+  border-bottom: solid 20px #777;
+  transform: rotate(-90deg);
+}
+screen {
+    display: flex;
+}
+vid {
+    flex: 82%;
+}
+dpad {
+    flex: 18%;
+}
+
+    </style>
+</head>
+<body>
+    <screen>
+    <dpad>
+                <div class="wrapper">
+
+        <div class="center">
+            <div class="center-circle"></div>
         </div>
-        <p id="gamepad-info">Waiting for Gamepad.</p>
         
-        <div id="ball"></div>
+        <div class="up direction" >
+          <div class="up-triangle" id="forward"></div>
+        </div>
+      
+        <div class="right direction" >
+          <div class="right-triangle" id="right"></div>
+        
+        </div>
 
-        <script>
-            var conn = new rtcbot.RTCConnection();
-            //gamepad
+        
+        <div class="down direction" >
+          <div class="down-triangle" id="back"></div>
+        </div>
+      
+        <div class="left direction" >
+          <div class="left-triangle" id="left"></div>
+        </div>
+</div>
+</dpad>
+<vid>
+<video autoplay playsinline controls width="100%" ></video> <audio autoplay></audio>
 
-            var gamepadInfo = document.getElementById("gamepad-info");
-var ball = document.getElementById("ball");
-var start;
-var a = 0;
-var b = 0;
+</vid>
+</screen>
 
-var rAF = window.mozRequestAnimationFrame ||
-window.webkitRequestAnimationFrame ||
-window.requestAnimationFrame;
-
-var rAFStop = window.mozCancelRequestAnimationFrame ||
-window.webkitCancelRequestAnimationFrame ||
-window.cancelRequestAnimationFrame;
-
-window.addEventListener("gamepadconnected", function() {
-var gp = navigator.getGamepads()[0];
-gamepadInfo.innerHTML = "Gamepad connected at index " + gp.index + ": " + gp.id + ". It has " + gp.buttons.length + " buttons and " + gp.axes.length + " axes.";
-
-gameLoop();
-});
-
-window.addEventListener("gamepaddisconnected", function() {
-gamepadInfo.innerHTML = "Waiting for gamepad.";
-
-rAFStop(start);
-});
-
-if(!('GamepadEvent' in window)) {
-// No gamepad events available, poll instead.
-var interval = setInterval(pollGamepads, 500);
-}
-
-function pollGamepads() {
-var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-for (var i = 0; i < gamepads.length; i++) {
-var gp = gamepads[i];
-if(gp) {
-  //gamepadInfo.innerHTML = "Gamepad connected at index " + gp.index + ": " + gp.id + ". It has " + gp.buttons.length + " buttons and " + gp.axes.length + " axes.";
-  gameLoop();
-  clearInterval(interval);
-}
-}
-}
-
-function buttonPressed(b) {
-if (typeof(b) == "object") {
-return b.pressed;
-}
-return b == 1.0;
-}
-var speed = 1500
-var steer = 1500
-function gameLoop() {
-var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads : []);
-if (!gamepads)
-return;
-
-var gp = gamepads[0];
-if (buttonPressed(gp.buttons[7])) {
-b+=gp.buttons[7].value;
-let rounded = Math.round(gp.buttons[7].value * 1000)
-speed = 1500 + rounded
-if (speed > 1800){
-    speed = 1800
-}
-//console.log(speed) 
-} else if (buttonPressed(gp.buttons[6])) {
-b-= gp.buttons[6].value
-let rounded = Math.round(gp.buttons[6].value * 1000)
-// console.log(rounded)
-speed = 1500 - rounded
-console.log(speed)
-if (speed < 700){
-    speed = 700
-}
-} else {
-  speed = 1500
-}
-if  (gp.axes[2] > .001) {
-  //console.log(gp.axes[2])
-  a+= gp.axes[2]
-  let rounded = Math.round(gp.axes[2] * -500)
-  steer += rounded
-  if (steer < 600){
-    steer = 600
-  }
-} else if  (gp.axes[2] < -.001) {
-  //console.log(gp.axes[2])
-  a+= gp.axes[2]
-  let rounded = Math.round(gp.axes[2] * -500)
-  steer += rounded
-  if (steer > 2400){
-    steer = 2400
-  }
-} else {
-  steer = 1500
-}
-console.log(speed,steer)
-conn.put_nowait(speed+":"+steer)
-
-
-// ball.style.left = a*2 + "px";
-// ball.style.top = b*2 + "px";
-
-var start = rAF(gameLoop);
-};
-//end gamepad
-            var sendControlSignal = (cmd) => {
+        
+<script>
+    var conn = new rtcbot.RTCConnection();
+    var sendControlSignal = (cmd) => {
                 cmd.preventDefault();
+                console.log(cmd.target.id)
                 conn.put_nowait(cmd.target.id)
                 }
             var sendStopSignal = (cmd) => conn.put_nowait("stop")
 
-            var buttons = document.getElementsByClassName("ctrl")
+            var buttons = document.getElementsByClassName("direction")
             for (let i = 0; i < buttons.length; i++){
                 buttons[i].addEventListener("mousedown", sendControlSignal)
                 buttons[i].addEventListener("mouseup", sendStopSignal)
@@ -394,7 +393,7 @@ var start = rAF(gameLoop);
             }
 
             conn.video.subscribe(function(stream) {
-                document.querySelector("video").srcObject = stream;
+               document.querySelector("video").srcObject = stream;
             });
 
             async function connect() {
@@ -414,7 +413,7 @@ var start = rAF(gameLoop);
             connect();
 
         </script>
-    </body>
+</body>
 </html>
     """,
     )
