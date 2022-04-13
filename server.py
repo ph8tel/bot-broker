@@ -201,7 +201,7 @@ async def index(request):
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yardbot</title>
-      <script src="/rtcbot.js"></script>
+    <script src="/rtcbot.js"></script>
     <style>
         *,
 *:before,
@@ -225,10 +225,10 @@ div {
   /* position: absolute; */
   height: 9em;
   /* margin: auto; */
-  top: 100px;
-  bottom: 0;
-  left: 100px;
-  right: 0;
+  top: 60px;
+  /* bottom: 0; */
+  left: 50px;
+  /* right: 0; */
   filter: drop-shadow(7px 5px 5px #777);
   float:right;
 
