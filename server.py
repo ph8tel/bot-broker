@@ -370,7 +370,7 @@ dpad {
 </div>
 </dpad>
 <vid>
-<video autoplay playsinline controls width="100%" ></video> <audio autoplay></audio>
+<video autoplay playsinline controls ></video> <audio autoplay></audio>
 
 </vid>
 </screen>
