@@ -701,10 +701,33 @@ video {
                     buttons[i].addEventListener("touchstart", sendControlSignal )
                     buttons[i].addEventListener("touchend", sendStopSignal )
                 }
-    
-                conn.video.subscribe(function(stream) {
-                   document.querySelector("video").srcObject = stream;
+            var sendStopSignal = (cmd) => conn.put_nowait("stop")
+
+            var buttons = document.getElementsByClassName("direction")
+            for (let i = 0; i < buttons.length; i++){
+                buttons[i].addEventListener("mousedown", sendControlSignal)
+                buttons[i].addEventListener("mouseup", sendStopSignal)
+                buttons[i].addEventListener("touchstart", sendControlSignal )
+                buttons[i].addEventListener("touchend", sendStopSignal )
+            }
+
+            conn.video.subscribe(function(stream) {
+               document.querySelector("video").srcObject = stream;
+            });
+            
+
+            async function connect() {
+                              let streams = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+                conn.audio.putSubscription(streams.getAudioTracks()[0])
+                let offer = await conn.getLocalDescription();
+
+                // POST the information to /connect
+                let response = await fetch("/connect", {
+                    method: "POST",
+                    cache: "no-cache",
+                    body: JSON.stringify(offer)
                 });
+<<<<<<< HEAD
                 conn.subscribe( (msg) => {
                   console.log("here", msg, msg == '"bot_ready"')
                   if ( msg === '"bot_ready"') {
@@ -732,6 +755,16 @@ video {
                 connect();
     
             </script>
+=======
+
+                await conn.setRemoteDescription(await response.json());
+
+                console.log("Ready!");
+            }
+            connect();
+
+        </script>
+>>>>>>> b39de5fbf97257c1f22bb697d74c7357aa4e5e23
 </body>
 </html>
     """,
