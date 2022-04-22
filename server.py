@@ -783,6 +783,6 @@ app = web.Application()
 app.add_routes(routes)
 app.on_shutdown.append(cleanup)
 
-#web.run_app(app, path="0.0.0.0", port=os.environ["PORT"])
-web.run_app(app)
+web.run_app(app, path="0.0.0.0", port=os.environ["PORT"])
+#web.run_app(app)
 
