@@ -684,8 +684,7 @@ video {
     </div>
 <script>
     var conn = new rtcbot.RTCConnection();
-    let streams = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-    conn.audio.putSubscription(streams.getAudioTracks()[0])
+
     var sendControlSignal = (cmd) => {
                 cmd.preventDefault();
                 console.log(cmd.target.id)
@@ -707,7 +706,8 @@ video {
 
             async function connect() {
                 let offer = await conn.getLocalDescription();
-
+                let streams = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+                conn.audio.putSubscription(streams.getAudioTracks()[0])
                 // POST the information to /connect
                 let response = await fetch("/connect", {
                     method: "POST",
