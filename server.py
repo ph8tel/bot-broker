@@ -650,7 +650,7 @@ video {
 
 <div class="wrapper fadeInDown">
     <div id="formContent">
-
+    <status>Bot not conected</status>
     <screen>
         <dpad>
             <div class="wrapper2">
@@ -674,7 +674,9 @@ video {
                 <div class="left-triangle" id="left"></div>
                 </div>
             </div>
+
         </dpad>
+        <button id = "off"> off</button>
         <vid>
                 <video autoplay playsinline controls ></video> <audio autoplay></audio>
         </vid>
@@ -683,6 +685,7 @@ video {
     </div>
     </div>
     <script>
+        var stats = document.querySelector("status")
         var conn = new rtcbot.RTCConnection();
         var sendControlSignal = (cmd) => {
                     cmd.preventDefault();
@@ -702,7 +705,16 @@ video {
                 conn.video.subscribe(function(stream) {
                    document.querySelector("video").srcObject = stream;
                 });
-    
+                conn.subscribe( (msg) => {
+                  console.log("here", msg, msg == '"bot_ready"')
+                  if ( msg === '"bot_ready"') {
+                    console.log("bot is ready")
+                    stats.innerHTML = '<p>Bot is Ready!</p>'
+                    }
+                  })
+    conn.audio.subscribe(function(stream) {
+  document.querySelector("audio").srcObject = stream;
+});
                 async function connect() {
                     let offer = await conn.getLocalDescription();
     
@@ -738,6 +750,6 @@ app = web.Application()
 app.add_routes(routes)
 app.on_shutdown.append(cleanup)
 
-web.run_app(app, path="0.0.0.0", port=os.environ["PORT"])
-#web.run_app(app)
+#web.run_app(app, path="0.0.0.0", port=os.environ["PORT"])
+web.run_app(app)
 
