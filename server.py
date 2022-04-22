@@ -727,7 +727,6 @@ video {
                     cache: "no-cache",
                     body: JSON.stringify(offer)
                 });
-<<<<<<< HEAD
                 conn.subscribe( (msg) => {
                   console.log("here", msg, msg == '"bot_ready"')
                   if ( msg === '"bot_ready"') {
@@ -755,16 +754,7 @@ video {
                 connect();
     
             </script>
-=======
 
-                await conn.setRemoteDescription(await response.json());
-
-                console.log("Ready!");
-            }
-            connect();
-
-        </script>
->>>>>>> b39de5fbf97257c1f22bb697d74c7357aa4e5e23
 </body>
 </html>
     """,
