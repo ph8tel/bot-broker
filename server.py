@@ -691,35 +691,38 @@ video {
                     cmd.preventDefault();
                     console.log(cmd.target.id)
                     conn.put_nowait(cmd.target.id)
-                    }
-                var sendStopSignal = (cmd) => conn.put_nowait("stop")
-    
-                var buttons = document.getElementsByClassName("direction")
-                for (let i = 0; i < buttons.length; i++){
-                    buttons[i].addEventListener("mousedown", sendControlSignal)
-                    buttons[i].addEventListener("mouseup", sendStopSignal)
-                    buttons[i].addEventListener("touchstart", sendControlSignal )
-                    buttons[i].addEventListener("touchend", sendStopSignal )
-                }
-            var sendStopSignal = (cmd) => conn.put_nowait("stop")
-
-            var buttons = document.getElementsByClassName("direction")
-            for (let i = 0; i < buttons.length; i++){
-                buttons[i].addEventListener("mousedown", sendControlSignal)
-                buttons[i].addEventListener("mouseup", sendStopSignal)
-                buttons[i].addEventListener("touchstart", sendControlSignal )
-                buttons[i].addEventListener("touchend", sendStopSignal )
             }
+        var sendStopSignal = (cmd) => conn.put_nowait("stop")
 
-            conn.video.subscribe(function(stream) {
-               document.querySelector("video").srcObject = stream;
-            });
+
+        var buttons = document.getElementsByClassName("direction")
+        for (let i = 0; i < buttons.length; i++){
+            buttons[i].addEventListener("mousedown", sendControlSignal)
+            buttons[i].addEventListener("mouseup", sendStopSignal)
+            buttons[i].addEventListener("touchstart", sendControlSignal )
+            buttons[i].addEventListener("touchend", sendStopSignal )
+        }
+
+        conn.video.subscribe(function(stream) {
+            document.querySelector("video").srcObject = stream;
+        });
+        conn.audio.subscribe(function(stream) {
+            document.querySelector("audio").srcObject = stream;
+        });
+        conn.subscribe( (msg) => {
+                  console.log("here", msg, msg == '"bot_ready"')
+                  if ( msg === '"bot_ready"') {
+                    console.log("bot is ready")
+                    stats.innerHTML = '<p>Bot is Ready!</p>'
+                    }
+                  })
+
             
 
-            async function connect() {
-                              let streams = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-                conn.audio.putSubscription(streams.getAudioTracks()[0])
-                let offer = await conn.getLocalDescription();
+        async function connect() {
+            let streams = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+            conn.audio.putSubscription(streams.getAudioTracks()[0])
+            let offer = await conn.getLocalDescription();
 
                 // POST the information to /connect
                 let response = await fetch("/connect", {
@@ -727,30 +730,8 @@ video {
                     cache: "no-cache",
                     body: JSON.stringify(offer)
                 });
-                conn.subscribe( (msg) => {
-                  console.log("here", msg, msg == '"bot_ready"')
-                  if ( msg === '"bot_ready"') {
-                    console.log("bot is ready")
-                    stats.innerHTML = '<p>Bot is Ready!</p>'
-                    }
-                  })
-    conn.audio.subscribe(function(stream) {
-  document.querySelector("audio").srcObject = stream;
-});
-                async function connect() {
-                    let offer = await conn.getLocalDescription();
-    
-                    // POST the information to /connect
-                    let response = await fetch("/connect", {
-                        method: "POST",
-                        cache: "no-cache",
-                        body: JSON.stringify(offer)
-                    });
-    
-                    await conn.setRemoteDescription(await response.json());
-    
-                    console.log("Ready!");
-                }
+
+            }
                 connect();
     
             </script>
