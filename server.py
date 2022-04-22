@@ -703,11 +703,13 @@ video {
             conn.video.subscribe(function(stream) {
                document.querySelector("video").srcObject = stream;
             });
+            
 
             async function connect() {
-                let offer = await conn.getLocalDescription();
-                let streams = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
+                              let streams = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
                 conn.audio.putSubscription(streams.getAudioTracks()[0])
+                let offer = await conn.getLocalDescription();
+
                 // POST the information to /connect
                 let response = await fetch("/connect", {
                     method: "POST",
