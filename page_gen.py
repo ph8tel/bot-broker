@@ -127,8 +127,9 @@ idx = """
         <script src="/rtcbot.js"></script>
     </head>
     <body style="text-align: center;padding-top: 30px;">
+        <button id="stop">stop</button>
         <video autoplay playsinline controls></video>
-        <audio></audio>
+        
         <p>
         Open the browser's developer tools to see console messages (CTRL+SHIFT+C)
         </p>
@@ -138,12 +139,9 @@ idx = """
             conn.video.subscribe(function(stream) {
                 document.querySelector("video").srcObject = stream;
             });
-            conn.audio.subscribe(function(stream) {
-                document.querySelector("audio").srcObject = stream;
-            });
             async function connect() {
-                let streams = await navigator.mediaDevices.getUserMedia({audio: true, video: false});
-conn.audio.putSubscription(streams.getAudioTracks()[0])
+                let streams = await navigator.mediaDevices.getUserMedia({audio: false, video: false});
+
 
                 let offer = await conn.getLocalDescription();
 
