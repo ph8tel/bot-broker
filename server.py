@@ -36,7 +36,7 @@ async def index(request):
         content_type="text/html",
         text=idx,)
 @routes.get("/tank")
-async def index(request):
+async def tank(request):
     return web.Response(
         content_type="text/html",
         text=truck,)
