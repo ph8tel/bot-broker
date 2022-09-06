@@ -24,7 +24,16 @@ async def connect(request):
     ws.put_nowait(clientOffer)
     robotResponse = await ws.get()
     return web.json_response(robotResponse)
-
+@routes.post("/connect-truck")
+async def connect_truck(request):
+    global ws
+    if ws is None:
+        raise web.HTTPInternalServerError("There is no robot connected")
+    clientOffer = await request.json()
+    # Send the offer to the robot, and receive its response
+    ws.put_nowait(clientOffer)
+    robotResponse = await ws.get()
+    return web.json_response(robotResponse)
 # Serve the RTCBot javascript library at /rtcbot.js
 @routes.get("/rtcbot.js")
 async def rtcbotjs(request):
