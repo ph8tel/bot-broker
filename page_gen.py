@@ -68,6 +68,13 @@ truck = """
                 </style>
         </head>
         <body>
+          <div style="background-color: black;">
+            <i id='forward' class="arrow up ctrl" ></i> 
+            <i id='left' class="arrow left ctrl" ></i> 
+            <i id='right'class="arrow right ctrl" ></i> 
+            <i id ="back" class="arrow down ctrl" ></i>
+            <button class="ctrl" id="off">off</button>  
+          </div>
             <div id="myDIV">
                 <div id="myBox">
             <video autoplay playsinline controls width = "640px" height="480"></video> <audio autoplay></audio>
@@ -78,15 +85,6 @@ truck = """
                     <i id='right'class="arrow right ctrl" style="top:120px;left:170px;z-index:1;"></i> 
                     <i id ="back" class="arrow down ctrl" style="top:200px;left:95px;z-index:1;"></i>   -->
             </div>
-            <div style="background-color: black;">
-              <i id='forward' class="arrow up ctrl" ></i> 
-              <i id='left' class="arrow left ctrl" ></i> 
-              <i id='right'class="arrow right ctrl" ></i> 
-              <i id ="back" class="arrow down ctrl" ></i>
-              <button class="ctrl" id="stop">stop</button>  
-            </div>
-
-
             <script>
                 var conn = new rtcbot.RTCConnection();
                 var sendControlSignal = (cmd) => {
