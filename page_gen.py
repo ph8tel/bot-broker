@@ -12,7 +12,37 @@ truck = """
       padding: 0;
       margin: 0;
     }
-
+                .arrow {
+                    opacity: 60%;
+                  width: 30px;
+                  height: 30px;
+                  border: solid white;
+                  border-width: 0 3px 3px 0;
+                  display: inline-block;
+                  padding: 30px;
+                  position:absolute;
+                  color: #E7E9EB;
+                }
+                
+                .right {
+                  transform: rotate(-45deg);
+                  -webkit-transform: rotate(-45deg);
+                }
+                
+                .left {
+                  transform: rotate(135deg);
+                  -webkit-transform: rotate(135deg);
+                }
+                
+                .up {
+                  transform: rotate(-135deg);
+                  -webkit-transform: rotate(-135deg);
+                }
+                
+                .down {
+                  transform: rotate(45deg);
+                  -webkit-transform: rotate(45deg);
+                }
     .grid-container {
       display: grid;
       grid-template-columns: auto auto;
