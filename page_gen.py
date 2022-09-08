@@ -77,13 +77,14 @@ truck = """
     </div>
    </div>  
     <div class="grid-item">
-    <div style="background-color: black;">
-        <i id='forward' class="arrow up ctrl" ></i> 
+    <div style="background-color: black; height: 300px; padding-top: 20px">
+        <i id='forward' class="arrow up ctrl" style="padding-top: 20px;"></i> 
         <i id='left' class="arrow left ctrl" ></i> 
         <i id='right'class="arrow right ctrl" ></i> 
         <i id ="back" class="arrow down ctrl" ></i>
-        <button class="ctrl" id="off">off</button>  
+        
     </div>
+    <button class="ctrl" id="off">off</button>  
   </div>
 
 </div>
@@ -100,9 +101,11 @@ truck = """
                     buttons[i].addEventListener("mousedown", sendControlSignal)
                     buttons[i].addEventListener("mouseup", sendStopSignal)
                     buttons[i].addEventListener("touchstart", sendControlSignal )
-                    buttons[i].addEventListener("touchend", sendStopSignal )
-                }
-
+                    if  (buttons[i].id !== 'off') {
+                      buttons[i].addEventListener("touchend", sendStopSignal )
+                
+                    }
+                  }
                 conn.video.subscribe(function(stream) {
                     document.querySelector("video").srcObject = stream;
                 });

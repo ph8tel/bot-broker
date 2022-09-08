@@ -1,37 +1,17 @@
+<!DOCTYPE html>
 <html>
-        <head>
-            <title>Joes Yardbot</title>
-            <script src="/rtcbot.js"></script>
-            <style>
-                body {
-                  background-color:#E7E9EB;
-                }
-                #myDIV {
-                  width:100%;
-                  position:absolute;
-                  background-color:#FFFFFF;
-                }
-                #myDIV div{
-                  /* width:100px;
-                  height:100px; */
-                  width:100%;
-
-                  position:absolute;
-                  /* background-color:yellow; */
-                  border:1px solid;
-                  opacity:0.5;
-                  margin:auto;
-                }
-                #myBox {
-                  position:absolute;
-                  opacity:1!important;
-                  z-index: 0;
-                  width:100%;
-                }
-                video{
-                    position: absolute;
-                    z-index: 0;
-                }
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Joe's Yardbot</title>
+  <script src="/rtcbot.js"></script>
+  <style>
+    body {
+      background: #fff;
+      font: 16px/1 Arial, Helvetica, sans-serif;
+      padding: 0;
+      margin: 0;
+    }
                 .arrow {
                     opacity: 60%;
                   width: 30px;
@@ -63,28 +43,51 @@
                   transform: rotate(45deg);
                   -webkit-transform: rotate(45deg);
                 }
-                
-                </style>
-        </head>
-        <body>
-          <div style="background-color: black;">
-            <i id='forward' class="arrow up ctrl" ></i> 
-            <i id='left' class="arrow left ctrl" ></i> 
-            <i id='right'class="arrow right ctrl" ></i> 
-            <i id ="back" class="arrow down ctrl" ></i>
-            <button class="ctrl" id="off">off</button>  
-          </div>
-            <div id="myDIV">
-                <div id="myBox">
-            <video autoplay playsinline controls width = "640px" height="480"></video> <audio autoplay></audio>
-                </div>
-            
-                    <!-- <i id='forward' class="arrow up ctrl" style="top:40px;left:95px;z-index:1;"></i> 
-                    <i id='left' class="arrow left ctrl" style="top:120px;left:20px;z-index:1;"></i> 
-                    <i id='right'class="arrow right ctrl" style="top:120px;left:170px;z-index:1;"></i> 
-                    <i id ="back" class="arrow down ctrl" style="top:200px;left:95px;z-index:1;"></i>   -->
-            </div>
-            <script>
+    .grid-container {
+      display: grid;
+      grid-template-columns: auto auto;
+      grid-template-rows: auto auto;
+      grid-column-gap: 10px;
+      grid-row-gap: 10px;
+      background: #fff;
+      padding: 5px;
+    }
+
+    .grid-item {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(0, 0, 0, 0.8);
+      padding: 5px;
+      font-size: 12px;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Joe's Yardbot</h1>
+
+<div class="grid-container">
+  <div class="grid-item">            
+    <div id="myDIV">
+        <div id="myBox">
+         <video autoplay playsinline controls width = "640px" height="480"></video> <audio autoplay></audio>
+        </div>
+    </div>
+   </div>  
+    <div class="grid-item">
+    <div style="background-color: black; height: 300px; padding-top: 20px">
+        <i id='forward' class="arrow up ctrl" style="padding-top: 20px;"></i> 
+        <i id='left' class="arrow left ctrl" ></i> 
+        <i id='right'class="arrow right ctrl" ></i> 
+        <i id ="back" class="arrow down ctrl" ></i>
+        
+    </div>
+    <button class="ctrl" id="off">off</button>  
+  </div>
+
+</div>
+           <script>
                 var conn = new rtcbot.RTCConnection();
                 var sendControlSignal = (cmd) => {
                     cmd.preventDefault();
@@ -97,9 +100,11 @@
                     buttons[i].addEventListener("mousedown", sendControlSignal)
                     buttons[i].addEventListener("mouseup", sendStopSignal)
                     buttons[i].addEventListener("touchstart", sendControlSignal )
-                    buttons[i].addEventListener("touchend", sendStopSignal )
-                }
-
+                    if  (buttons[i].id !== 'off') {
+                      buttons[i].addEventListener("touchend", sendStopSignal )
+                
+                    }
+                  }
                 conn.video.subscribe(function(stream) {
                     document.querySelector("video").srcObject = stream;
                 });
@@ -121,5 +126,5 @@
                 connect();
 
             </script>
-        </body>
-    </html>
+</body>
+</html>
