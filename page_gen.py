@@ -86,7 +86,43 @@ truck = """
   </div>
 
 </div>
+           <script>
+                var conn = new rtcbot.RTCConnection();
+                var sendControlSignal = (cmd) => {
+                    cmd.preventDefault();
+                    conn.put_nowait(cmd.target.id)
+                    }
+                var sendStopSignal = (cmd) => conn.put_nowait("stop")
 
+                var buttons = document.getElementsByClassName("ctrl")
+                for (let i = 0; i < buttons.length; i++){
+                    buttons[i].addEventListener("mousedown", sendControlSignal)
+                    buttons[i].addEventListener("mouseup", sendStopSignal)
+                    buttons[i].addEventListener("touchstart", sendControlSignal )
+                    buttons[i].addEventListener("touchend", sendStopSignal )
+                }
+
+                conn.video.subscribe(function(stream) {
+                    document.querySelector("video").srcObject = stream;
+                });
+
+                async function connect() {
+                    let offer = await conn.getLocalDescription();
+
+                    // POST the information to /connect
+                    let response = await fetch("/connect-truck", {
+                        method: "POST",
+                        cache: "no-cache",
+                        body: JSON.stringify(offer)
+                    });
+
+                    await conn.setRemoteDescription(await response.json());
+
+                    console.log("Ready!");
+                }
+                connect();
+
+            </script>
 </body>
 </html>
 """

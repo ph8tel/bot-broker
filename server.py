@@ -20,6 +20,7 @@ async def connect(request):
     if ws is None:
         raise web.HTTPInternalServerError("There is no robot connected")
     clientOffer = await request.json()
+    print('ws ix', clientOffer)
     # Send the offer to the robot, and receive its response
     ws.put_nowait(clientOffer)
     robotResponse = await ws.get()
