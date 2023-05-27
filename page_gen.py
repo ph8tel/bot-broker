@@ -1,3 +1,77 @@
+test = """
+
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>yardbot</title>
+  <script src="/rtcbot.js"></script>
+</head>
+
+<body>
+
+    <video width="320" height="240" controls>
+        <source src="movie.mp4" type="video/mp4">
+        <source src="movie.ogg" type="video/ogg">
+        <source src="movie.webm" type="video/webm">
+        <object data="movie.mp4" width="320" height="240">
+          <embed src="movie.swf" width="320" height="240">
+        </object>
+        <button type="button" style="position:absolute; top:50%; left:50%; margin:-40px 0 0 -40px; width:80px; height:80px;" onclick="playPause()">Play/Pause</button>
+        <button type="button" style="position:absolute; top:50%; left:10px; margin:-40px 0 0 -40px; width:80px; height:80px;">Mute</button>
+        <button type="button" style="position:absolute; top:50%; right:10px; margin:-40px 0 0 -40px; width:80px; height:80px;">Fullscreen</button>
+        <button type="button" style="position:absolute; bottom:10px; left:50%; margin:0 0 -40px -40px; width:80px; height:80px;">Captions</button>
+      </video>
+      
+  
+  <script>
+      var conn = new rtcbot.RTCConnection();
+      var sendControlSignal = (cmd) => {
+          cmd.preventDefault();
+          conn.put_nowait(cmd.target.id)
+          }
+      var sendStopSignal = (cmd) => conn.put_nowait("stop")
+
+      var buttons = document.getElementsByClassName("ctrl")
+      
+      if (buttons.length > 0) {
+        for (let i = 0; i < buttons.length; i++){
+          buttons[i].addEventListener("mousedown", sendControlSignal)
+          buttons[i].addEventListener("mouseup", sendStopSignal)
+          buttons[i].addEventListener("touchstart", sendControlSignal )
+          if (buttons[i] !== 'off') {
+            buttons[i].addEventListener("touchend", sendStopSignal )
+          }
+        }
+      }
+
+      conn.video.subscribe(function(stream) {
+          document.querySelector("video").srcObject = stream;
+      });
+
+      async function connect() {
+          let offer = await conn.getLocalDescription();
+
+          // POST the information to /connect
+          let response = await fetch("/connect-truck", {
+              method: "POST",
+              cache: "no-cache",
+              body: JSON.stringify(offer)
+          });
+
+          await conn.setRemoteDescription(await response.json());
+
+          console.log("Ready!");
+      }
+      connect();
+
+  </script>
+
+</body>
+</html>
+
+"""
+
 truck = """
 <!DOCTYPE html>
 <html>

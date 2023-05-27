@@ -1,7 +1,7 @@
 from aiohttp import web
 import os
 routes = web.RouteTableDef()
-from page_gen import idx, truck
+from page_gen import idx, truck, test
 from rtcbot import Websocket, getRTCBotJS
 ws = None # Websocket connection to the robot
 @routes.get("/ws")
@@ -50,6 +50,11 @@ async def tank(request):
     return web.Response(
         content_type="text/html",
         text=truck,)
+@routes.get("/test")
+async def tank(request):
+    return web.Response(
+        content_type="text/html",
+        text=test,)
 
 
 async def cleanup(app=None):
