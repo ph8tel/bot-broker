@@ -130,7 +130,7 @@ truck = """
       <img id="down" width="100px" src="https://toppng.com/uploads/preview/wind-direction-png-clipart-library-wind-direction-icon-115629307179jemtlpetx.png" class="ctrl down" />
       <img id="right" width="100px" src="https://toppng.com/uploads/preview/wind-direction-png-clipart-library-wind-direction-icon-115629307179jemtlpetx.png" class="ctrl left" />
       <img width="218px" height="100px" src="https://p.kindpng.com/picc/s/107-1078619_stop-sign-icon-png-stop-sign-black-and.png" class="ctrl"/>      <video autoplay playsinline controls width = "640px" height="480"></video>    
-      <button class="ctrl" id="off">off</button>  
+      <button class="ctrl" id="lightsoff">flashers</button>  
     </div>
   
   <script>
@@ -146,7 +146,7 @@ truck = """
           buttons[i].addEventListener("mousedown", sendControlSignal)
           buttons[i].addEventListener("mouseup", sendStopSignal)
           buttons[i].addEventListener("touchstart", sendControlSignal )
-          if (buttons[i] !== 'off') {
+          if (buttons[i] !== 'lightsoff') {
             buttons[i].addEventListener("touchend", sendStopSignal )
           }
       }
