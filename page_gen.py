@@ -136,6 +136,7 @@ truck = """
   <script>
       var conn = new rtcbot.RTCConnection();
       var sendControlSignal = (cmd) => {
+        console.log('sending ', cmd.target.id)
           cmd.preventDefault();
           conn.put_nowait(cmd.target.id)
           }
@@ -146,7 +147,8 @@ truck = """
           buttons[i].addEventListener("mousedown", sendControlSignal)
           buttons[i].addEventListener("mouseup", sendStopSignal)
           buttons[i].addEventListener("touchstart", sendControlSignal )
-          if (buttons[i] !== 'lightsoff') {
+          console.log('button ', buttons(i))
+          if (buttons[i].id !== 'lightsoff') {
             buttons[i].addEventListener("touchend", sendStopSignal )
           }
       }
