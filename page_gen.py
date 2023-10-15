@@ -355,7 +355,7 @@ idx ="""
         let offer = await conn.getLocalDescription();
 
         // POST the information to /connect
-        let response = await fetch("/connect-truck", {
+        let response = await fetch("/connect", {
             method: "POST",
             cache: "no-cache",
             body: JSON.stringify(offer)
