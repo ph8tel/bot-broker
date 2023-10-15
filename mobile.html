@@ -81,7 +81,7 @@
 </head>
 
 <body>
-    <div class="row centered">
+    <div class="row">
         <div class="column col-1" >
             <img id="up" width="100px"
                 src="https://toppng.com/uploads/preview/wind-direction-png-clipart-library-wind-direction-icon-115629307179jemtlpetx.png"
@@ -131,7 +131,7 @@
         let offer = await conn.getLocalDescription();
 
         // POST the information to /connect
-        let response = await fetch("/connect-truck", {
+        let response = await fetch("/connect", {
             method: "POST",
             cache: "no-cache",
             body: JSON.stringify(offer)
