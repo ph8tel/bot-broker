@@ -147,7 +147,7 @@ truck = """
           buttons[i].addEventListener("mousedown", sendControlSignal)
           buttons[i].addEventListener("mouseup", sendStopSignal)
           buttons[i].addEventListener("touchstart", sendControlSignal )
-          console.log('button ', buttons(i))
+          console.log('button ', buttons[i])
           if (buttons[i].id !== 'lightsoff') {
             buttons[i].addEventListener("touchend", sendStopSignal )
           }
