@@ -1,7 +1,7 @@
 from aiohttp import web
 import os
 routes = web.RouteTableDef()
-from page_gen import idx, truck, test
+from page_gen import idx, truck, test, controller
 from rtcbot import Websocket, getRTCBotJS
 ws = None # Websocket connection to the robot
 @routes.get("/ws")
@@ -12,6 +12,10 @@ async def websocket(request):
     await ws  # Wait until the websocket closes
     print("Robot disconnected")
     return ws.ws
+@routes.get("/scripts/{filename}")
+def get_script(request):
+    filename = request.match_info.get('filename')
+    return web.FileResponse(os.path.join(os.getcwd(), filename))
 
 # Called by the browser to set up a connection
 @routes.post("/connect")
@@ -49,7 +53,7 @@ async def index(request):
 async def tank(request):
     return web.Response(
         content_type="text/html",
-        text=truck,)
+        text=controller,)
 @routes.get("/test")
 async def tank(request):
     return web.Response(
