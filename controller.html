@@ -129,7 +129,7 @@
                 if (gp.buttons[1].pressed) {
                     conn.put_nowait('lightsoff')
                 }
-                for (let i = 0; i <= 3; i++) {
+                for (let i = 0; i <= 1; i++) {
                     window.stopped = false
                     let move = Math.round(gp.axes[i] * 1000)
                     let adjusted = Math.round(1500 + move / 2)
