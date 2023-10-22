@@ -247,7 +247,7 @@ controller = """
         <button id="stopped">STOPPED</button>
          <button class="ctrl" id="lightson">flashers</button>  
         </div>
-      
+        <video autoplay playsinline controls width = "640px" height="480"></video> <audio autoplay></audio>
       <script>
         const stoppedButton = document.getElementById('stopped')
         const padConnectedButton = document.getElementById('pad-connected')
