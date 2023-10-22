@@ -134,11 +134,10 @@ let poll_tango = async () => {
             if (adjusted < 1550 && adjusted > 1450) {
                 adjusted = 1500
             }
-            if ( sendCommand ) {
+            if ( sendControlSignal ) {
                 sendControlSignal(`axe:${i}:${adjusted}`)
             } else {
-                console.log(`axe:${i}:${adjusted}:no send command found`
-                )
+                console.log(`axe:${i}:${adjusted}:no send command found`)
             }
 
             console.log(i, adjusted)
