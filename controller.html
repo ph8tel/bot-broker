@@ -117,7 +117,7 @@
             const gpConnected = document.getElementById('pad-connected')
             let intervlId
             window.stopped = true
-
+            let currentPosition
             let poll_tango = async () => {
                 var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
                 var gp = gamepads[0]
@@ -125,6 +125,7 @@
 
                 if (gp.buttons[0].pressed) {
                     conn.put_nowait('stop')
+                    currentPosition = 1500
                 }
                 if (gp.buttons[1].pressed) {
                     conn.put_nowait('lightsoff')
@@ -142,8 +143,9 @@
                     if (adjusted < 1550 && adjusted > 1450) {
                         adjusted = 1500
                     }
-                    if (sendControlSignal) {
+                    if (adjusted !== currentPosition) {
                         conn.put_nowait(`axe:${i}:${adjusted}`)
+                        currentPosition = adjusted
                     } else {
                         console.log(`axe:${i}:${adjusted}:no send command found`)
                     }
