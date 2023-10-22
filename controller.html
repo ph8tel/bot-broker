@@ -128,7 +128,7 @@
                     currentPosition = 1500
                 }
                 if (gp.buttons[1].pressed) {
-                    conn.put_nowait('lightsoff')
+                    conn.put_nowait('lightson')
                 }
                 for (let i = 0; i <= 1; i++) {
                     window.stopped = false
@@ -163,7 +163,7 @@
                 gpConnected.style.backgroundColor = 'green'
 
                 //start the show
-                intervalId = setInterval(poll_tango, 100)
+                intervalId = setInterval(poll_tango, 75)
                 // Note:
                 // gamepad === navigator.getGamepads()[gamepad.index]
 
