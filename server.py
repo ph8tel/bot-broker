@@ -16,6 +16,10 @@ async def websocket(request):
 def get_script(request):
     filename = request.match_info.get('filename')
     return web.FileResponse(os.path.join(os.getcwd(), filename))
+@routes.get("/gp")
+def get_script(request):
+    
+    return web.FileResponse(os.path.join(os.getcwd(), 'controller.html'))
 
 # Called by the browser to set up a connection
 @routes.post("/connect")
