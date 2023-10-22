@@ -121,7 +121,7 @@
             let poll_tango = async () => {
                 var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
                 var gp = gamepads[0]
-                let move = Math.round(gp.axes[i] * 1000)
+                
 
                 if (gp.buttons[0].pressed) {
                     conn.put_nowait('stop')
@@ -131,6 +131,7 @@
                 }
                 for (let i = 0; i <= 3; i++) {
                     window.stopped = false
+                    let move = Math.round(gp.axes[i] * 1000)
                     let adjusted = Math.round(1500 + move / 2)
                     if (adjusted > 1920) {
                         adjusted = 2000
