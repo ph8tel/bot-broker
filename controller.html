@@ -135,7 +135,7 @@ let poll_tango = async () => {
                 adjusted = 1500
             }
             if ( sendControlSignal ) {
-                sendControlSignal(`axe:${i}:${adjusted}`)
+                conn.put_nowait(`axe:${i}:${adjusted}`)
             } else {
                 console.log(`axe:${i}:${adjusted}:no send command found`)
             }
