@@ -12,172 +12,180 @@
 
     <!DOCTYPE html>
     <html>
+
     <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>yardbot</title>
-      <script src="/rtcbot.js"></script>
-      <style>
-        .arrow {
-            opacity: 60%;
-          width: 30px;
-          height: 30px;
-          border: solid white;
-          border-width: 0 3px 3px 0;
-          display: inline-block;
-          padding: 30px;
-          position:absolute;
-          color: #E7E9EB;
-        }
-        
-        .right {
-          transform: rotate(-90deg);
-          -webkit-transform: rotate(-90deg);
-          left: 20px;
-        }
-        
-        .left {
-          transform: rotate(90deg);
-          -webkit-transform: rotate(90deg);
-        }
-        
-    
-        .down {
-          transform: rotate(180deg);
-          -webkit-transform: rotate(180deg);
-        }
-       .centered {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-        body {
-          background-image: url("https://www.rv.com/wp-content/uploads/2020/12/IMG_1677.jpg");
-          background-size: cover;
-          background-repeat: no-repeat;
-        }
-      </style>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>yardbot</title>
+        <script src="/rtcbot.js"></script>
+        <style>
+            .arrow {
+                opacity: 60%;
+                width: 30px;
+                height: 30px;
+                border: solid white;
+                border-width: 0 3px 3px 0;
+                display: inline-block;
+                padding: 30px;
+                position: absolute;
+                color: #E7E9EB;
+            }
+
+            .right {
+                transform: rotate(-90deg);
+                -webkit-transform: rotate(-90deg);
+                left: 20px;
+            }
+
+            .left {
+                transform: rotate(90deg);
+                -webkit-transform: rotate(90deg);
+            }
+
+
+            .down {
+                transform: rotate(180deg);
+                -webkit-transform: rotate(180deg);
+            }
+
+            .centered {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            body {
+                background-image: url("https://www.rv.com/wp-content/uploads/2020/12/IMG_1677.jpg");
+                background-size: cover;
+                background-repeat: no-repeat;
+            }
+        </style>
     </head>
-    
+
     <body>
         <div class="centered">
-        <button id="pad-connected">PAD CONNECTED</button>
-        <button id="stopped">STOPPED</button>
-         <button class="ctrl" id="lightson">flashers</button>  
+            <button id="pad-connected">PAD CONNECTED</button>
+            <button id="stopped">STOPPED</button>
+            <button class="ctrl" id="lightson">flashers</button>
         </div>
-        <video autoplay playsinline controls width = "640px" height="480"></video> <audio autoplay></audio>
-      <script>
-        const stoppedButton = document.getElementById('stopped')
-        const padConnectedButton = document.getElementById('pad-connected')
-        const flashersButton = document.getElementById('lightson')
-        var conn = new rtcbot.RTCConnection();
-          var sendControlSignal = (cmd) => {
-            console.log('sending ', cmd.target.id)
-              cmd.preventDefault();
-              conn.put_nowait(cmd.target.id)
-              }
-          var sendStopSignal = (cmd) => conn.put_nowait("stop")
-    
-          var buttons = document.getElementsByClassName("ctrl")
-          for (let i = 0; i < buttons.length; i++){
-              buttons[i].addEventListener("mousedown", sendControlSignal)
-              buttons[i].addEventListener("mouseup", sendStopSignal)
-              buttons[i].addEventListener("touchstart", sendControlSignal )
-              console.log('button ', buttons[i].id)
-              if (buttons[i].id !== 'lightson') {
-                buttons[i].addEventListener("touchend", sendStopSignal )
-              }
-          }
-    
-          conn.video.subscribe(function(stream) {
-              document.querySelector("video").srcObject = stream;
-          });
-    
-          async function connect() {
-              let offer = await conn.getLocalDescription();
-    
-              // POST the information to /connect
-              let response = await fetch("/connect-truck", {
-                  method: "POST",
-                  cache: "no-cache",
-                  body: JSON.stringify(offer)
-              });
-    
-              await conn.setRemoteDescription(await response.json());
-    
-              console.log("Ready!");
-          }
-          connect();
-    // if a gamepad exists
-    var gamepads = [];
-const gpConnected = document.getElementById('pad-connected')
-let intervlId
-window.stopped = true
-
-let poll_tango = async () => {
-    var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-    var gp = gamepads[0]
-
-    for (let i = 0; i < 5; i++) {
-        let move = Math.round(gp.axes[i] * 1000)
-
-        if ((Math.abs(move) > 20) && i !== 3) {
-            window.stopped = false
-            let adjusted = Math.round(1500 + move / 2)
-            if (adjusted > 1920) {
-                adjusted = 2000
+        <video autoplay playsinline controls width="640px" height="480"></video> <audio autoplay></audio>
+        <script>
+            const stoppedButton = document.getElementById('stopped')
+            const padConnectedButton = document.getElementById('pad-connected')
+            const flashersButton = document.getElementById('lightson')
+            var conn = new rtcbot.RTCConnection();
+            var sendControlSignal = (cmd) => {
+                console.log('sending ', cmd.target.id)
+                cmd.preventDefault();
+                conn.put_nowait(cmd.target.id)
             }
-            if (adjusted < 1100) {
-                adjusted = 1000
-            }
-            if (adjusted < 1550 && adjusted > 1450) {
-                adjusted = 1500
-            }
-            if ( sendControlSignal ) {
-                conn.put_nowait(`axe:${i}:${adjusted}`)
-            } else {
-                console.log(`axe:${i}:${adjusted}:no send command found`)
+            var sendStopSignal = (cmd) => conn.put_nowait("stop")
+
+            var buttons = document.getElementsByClassName("ctrl")
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].addEventListener("mousedown", sendControlSignal)
+                buttons[i].addEventListener("mouseup", sendStopSignal)
+                buttons[i].addEventListener("touchstart", sendControlSignal)
+                console.log('button ', buttons[i].id)
+                if (buttons[i].id !== 'lightson') {
+                    buttons[i].addEventListener("touchend", sendStopSignal)
+                }
             }
 
-            console.log(i, adjusted)
-        }
+            conn.video.subscribe(function (stream) {
+                document.querySelector("video").srcObject = stream;
+            });
+
+            async function connect() {
+                let offer = await conn.getLocalDescription();
+
+                // POST the information to /connect
+                let response = await fetch("/connect-truck", {
+                    method: "POST",
+                    cache: "no-cache",
+                    body: JSON.stringify(offer)
+                });
+
+                await conn.setRemoteDescription(await response.json());
+
+                console.log("Ready!");
+            }
+            connect();
+            // if a gamepad exists
+            var gamepads = [];
+            const gpConnected = document.getElementById('pad-connected')
+            let intervlId
+            window.stopped = true
+
+            let poll_tango = async () => {
+                var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+                var gp = gamepads[0]
+                let move = Math.round(gp.axes[i] * 1000)
+
+                if (gp.buttons[0].pressed) {
+                    conn.put_nowait('stop')
+                }
+                if (gp.buttons[1].pressed) {
+                    conn.put_nowait('lightsoff')
+                }
+                for (let i = 0; i <= 3; i++) {
+                    window.stopped = false
+                    let adjusted = Math.round(1500 + move / 2)
+                    if (adjusted > 1920) {
+                        adjusted = 2000
+                    }
+                    if (adjusted < 1100) {
+                        adjusted = 1000
+                    }
+                    if (adjusted < 1550 && adjusted > 1450) {
+                        adjusted = 1500
+                    }
+                    if (sendControlSignal) {
+                        conn.put_nowait(`axe:${i}:${adjusted}`)
+                    } else {
+                        console.log(`axe:${i}:${adjusted}:no send command found`)
+                    }
+
+                    console.log(i, adjusted)
+                }
 
 
-    }
-}
+            }
+            
 
-function gamepadHandler(event, connecting) {
-    var gamepad = event.gamepad;
-    console.log("Gamepad connected", event)
+            function gamepadHandler(event, connecting) {
+                var gamepad = event.gamepad;
+                console.log("Gamepad connected", event)
 
 
-    gpConnected.style.backgroundColor = 'green'
+                gpConnected.style.backgroundColor = 'green'
 
-    //start the show
-    intervalId = setInterval(poll_tango, 25)
-    // Note:
-    // gamepad === navigator.getGamepads()[gamepad.index]
+                //start the show
+                intervalId = setInterval(poll_tango, 25)
+                // Note:
+                // gamepad === navigator.getGamepads()[gamepad.index]
 
-    if (connecting) {
-        gamepads.push(gamepad);
-    } else {
-        gamepads.pop();
-    }
-}
+                if (connecting) {
+                    gamepads.push(gamepad);
+                } else {
+                    gamepads.pop();
+                }
+            }
 
-function GamepadDisconector(event) {
-    //cancel interval
-    clearInterval(intervalId)
-    gamepads.pop()
-    gpConnected.style.backgroundColor = 'red'
-    gpConnected.innerText = 'PAD NOT CONNECTED'
-}
+            function GamepadDisconector(event) {
+                //cancel interval
+                clearInterval(intervalId)
+                gamepads.pop()
+                gpConnected.style.backgroundColor = 'red'
+                gpConnected.innerText = 'PAD NOT CONNECTED'
+            }
 
-window.addEventListener("gamepadconnected", function (e) { gamepadHandler(e, true); }, false);
-window.addEventListener("gamepaddisconnected", function (e) { GamepadDisconector(e); }, false);
+            window.addEventListener("gamepadconnected", function (e) { gamepadHandler(e, true); }, false);
+            window.addEventListener("gamepaddisconnected", function (e) { GamepadDisconector(e); }, false);
 
-      </script>
-    
+        </script>
+
     </body>
+
     </html>
