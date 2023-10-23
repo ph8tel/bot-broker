@@ -60,6 +60,9 @@
                 background-size: cover;
                 background-repeat: no-repeat;
             }
+            .hidden {
+                visibility: hidden;
+            }
         </style>
     </head>
 
@@ -82,17 +85,6 @@
             }
             var sendStopSignal = (cmd) => conn.put_nowait("stop")
 
-            var buttons = document.getElementsByClassName("ctrl")
-            for (let i = 0; i < buttons.length; i++) {
-                buttons[i].addEventListener("mousedown", sendControlSignal)
-                buttons[i].addEventListener("mouseup", sendStopSignal)
-                buttons[i].addEventListener("touchstart", sendControlSignal)
-                console.log('button ', buttons[i].id)
-                if (buttons[i].id !== 'lightson') {
-                    buttons[i].addEventListener("touchend", sendStopSignal)
-                }
-            }
-
             conn.video.subscribe(function (stream) {
                 document.querySelector("video").srcObject = stream;
             });
@@ -106,8 +98,11 @@
                     cache: "no-cache",
                     body: JSON.stringify(offer)
                 });
-
-                await conn.setRemoteDescription(await response.json());
+                if (response.bot_available === 'no') {
+                    return connect()
+                } else {
+                   await conn.setRemoteDescription(await response.json());
+                }
 
                 console.log("Ready!");
             }
@@ -115,7 +110,7 @@
             // if a gamepad exists
             var gamepads = [];
             const gpConnected = document.getElementById('pad-connected')
-            let intervlId
+            let intervlId, aliveIntervalId
             window.stopped = true
             let currentPositions = []
             let poll_tango = async () => {
@@ -126,9 +121,11 @@
                 if (gp.buttons[0].pressed) {
                     conn.put_nowait('stop')
                     currentPosition = 1500
+                    toggler(stoppedButton)
                 }
                 if (gp.buttons[1].pressed) {
                     conn.put_nowait('lightson')
+                    toggler(flashersButton)
                 }
                 for (let i = 0; i <= 1; i++) {
                     window.stopped = false
@@ -164,6 +161,7 @@
 
                 //start the show
                 intervalId = setInterval(poll_tango, 75)
+                aliveIntervalId = setInterval( () => conn.put_nowait('stayin alive'), 300000)
                 // Note:
                 // gamepad === navigator.getGamepads()[gamepad.index]
 
@@ -172,6 +170,8 @@
                 } else {
                     gamepads.pop();
                 }
+                toggler(padConnectedButton)
+
             }
 
             function GamepadDisconector(event) {

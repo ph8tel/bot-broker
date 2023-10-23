@@ -36,10 +36,12 @@ async def connect(request):
 @routes.post("/connect-truck")
 async def connect_truck(request):
     global ws
-    if ws is None:
-        raise web.HTTPInternalServerError("There is no robot connected")
+    # if ws is None:
+    #     raise web.HTTPInternalServerError("There is no robot connected")
     clientOffer = await request.json()
     # Send the offer to the robot, and receive its response
+    if ws is None:
+        return web.json_response({ 'bot_available': 'no'})
     ws.put_nowait(clientOffer)
     robotResponse = await ws.get()
     return web.json_response(robotResponse)
