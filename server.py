@@ -20,6 +20,12 @@ def get_script(request):
 def get_script(request):
     
     return web.FileResponse(os.path.join(os.getcwd(), 'controller.html'))
+
+@routes.get("/blower")
+def get_script(request):
+    
+    return web.FileResponse(os.path.join(os.getcwd(), 'snowBlower.html'))
+
 @routes.get("/car")
 def get_script(request):
     
