@@ -5,7 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yardbot</title>
+    <script src="/rtcbot.js"></script>
+    <title>Blower</title>
 </head>
 
 <body>
@@ -14,8 +15,28 @@
     <button class="ctrl" id="blower">blower on</button>
     <script>
         //command syntax '<type>:<servo number>:<value>'
-            
-        
+        const conn = new rtcbot.RTCConnection();
+        conn.video.subscribe(function (stream) {
+            document.querySelector("video").srcObject = stream;
+        });
+        async function connect() {
+            let offer = await conn.getLocalDescription();
+
+            // POST the information to /connect
+            let response = await fetch("/connect-truck", {
+                method: "POST",
+                cache: "no-cache",
+                body: JSON.stringify(offer)
+            });
+            if (response.bot_available === 'no') {
+                return connect()
+            } else {
+                await conn.setRemoteDescription(await response.json());
+            }
+
+            console.log("Ready!");
+        }
+        connect();
         var gamepads = [];
         const gpConnected = document.getElementById('pad-connected')
         let intervlId
@@ -35,8 +56,9 @@
             if ( typeof cmd  === 'string' && cmd.includes(':')) {
                 commands = cmd
             } else {
-                commands = 'incorrect format: ' + cmd 
+                commands = 'error:incorrect format:' + cmd 
             }
+             conn.put_nowait()
              console.log(commands)
         }
         
