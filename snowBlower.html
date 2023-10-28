@@ -17,12 +17,12 @@
     <script>
         //command syntax '<type>:<servo number>:<value>'
         const conn = new rtcbot.RTCConnection();
-        conn.video.subscribe(function (stream) {
-            document.querySelector("video").srcObject = stream;
-        });
+
         async function connect() {
             let offer = await conn.getLocalDescription();
-
+            conn.video.subscribe(function (stream) {
+            document.querySelector("video").srcObject = stream;
+        });
             // POST the information to /connect
             let response = await fetch("/connect-truck", {
                 method: "POST",
@@ -59,7 +59,7 @@
             } else {
                 commands = 'error:incorrect format:' + cmd 
             }
-             conn.put_nowait()
+             conn.put_nowait(commands)
              console.log(commands)
         }
         
