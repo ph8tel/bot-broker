@@ -146,12 +146,12 @@
                     return formatted
                 }
                 if (brake.touched) {
-                    conn.put_nowait('0:', pwmValueFormatter(brake.value * -1))
+                    conn.put_nowait('0,', pwmValueFormatter(brake.value * -1))
                     stopped = false
                 }
                 else if (throttle.touched && !brake.touched) {
                     stopped = false
-                    conn.put_nowait('0', pwmValueFormatter(throttle.value))
+                    conn.put_nowait('0,', pwmValueFormatter(throttle.value))
                 } else if (!throttle.touched && !brake.touched && !stopped) {
                     stopped = true
                     conn.put_nowait('0,1500')
@@ -160,7 +160,7 @@
 
                 let steerValue = pwmValueFormatter(gp.axes[0])
                 if (previousSteer !== steerValue) {
-                    conn.put_nowait('1:',steerValue)
+                    conn.put_nowait('1,',steerValue)
                     previousSteer = steerValue
                 }
 
