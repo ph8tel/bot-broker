@@ -86,7 +86,7 @@
             let throttle = gp.buttons[7]
             let brake = gp.buttons[6]
             const pwmValueFormatter = (number) => {
-                let formatted = Math.floor(number * 1500) + 500
+                let formatted = Math.floor(number * 1000) + 1000
                 if ( formatted > 2490 ) {
                     formatted = 2500
                 } else if ( formatted > 1450 && formatted < 1610 ) {
