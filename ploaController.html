@@ -19,13 +19,14 @@
 
 <body>
     <div class="centered">
-        <button id="pad-connected">PAD CONNECTED</button>
+    <video autoplay playsinline controls width="100%"></video> <audio autoplay></audio>
+
+        <button id="pad-connected">CONTROLLED</button>
         <button id="stopped">STOPPED</button>
         <button class="ctrl" id="lights">LIGHTS ON</button>
         <button class="ctrl" id="plow">PLOW DOWN</button>
 
     </div>
-    <video autoplay playsinline controls width="100%"></video> <audio autoplay></audio>
     <script>
        // const local = false
         //if (!local) {
@@ -126,12 +127,17 @@
             if (brake.touched) {
                 speaker('servo:0:' + pwmValueFormatter(brake.value * -1))
                 stopped = false
+                stoppedButton.style.visibility = 'hidden'
             }
             else if (throttle.touched && !brake.touched) {
                 stopped = false
+                stoppedButton.style.visibility = 'hidden'
+
                 speaker('servo:0:' + + pwmValueFormatter(throttle.value))
             } else if (!throttle.touched && !brake.touched && !stopped) {
                 stopped = true
+                stoppedButton.style.visibility = 'visible'
+
                 speaker('servo:0:1500')
 
             }

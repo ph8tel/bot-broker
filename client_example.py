@@ -63,7 +63,7 @@ async def cmnd():
             if command_packet[2] == 'up':
                pwm.setServoPulse(2, 2500)
             if command_packet[2] == 'down':
-              pwm.setservoPulse(2, 500)
+              pwm.setServoPulse(2, 500)
       
          
 
