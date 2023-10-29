@@ -23,7 +23,7 @@
 
         <button id="pad-connected">CONTROLLED</button>
         <button id="stopped">STOPPED</button>
-        <button class="ctrl" id="lights">LIGHTS ON</button>
+        <button class="ctrl" id="lights">LIGHTS</button>
         <button class="ctrl" id="plow">PLOW DOWN</button>
 
     </div>
@@ -106,11 +106,12 @@
             }
             if (gp.buttons[3].pressed) {
                 speaker('button:plow:up')
-                toggler(plowButton)
+                plowButton.style.visibility = 'visible'
             }
             if (gp.buttons[2].pressed) {
                 speaker('button:plow:down')
-                toggler(plowButton)
+                plowButton.style.visibility = 'hidden'
+
             }
 
             let throttle = gp.buttons[7]
