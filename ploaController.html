@@ -27,15 +27,15 @@
     </div>
     <video autoplay playsinline controls width="100%"></video> <audio autoplay></audio>
     <script>
-        const local = false
-        if (!local) {
+       // const local = false
+        //if (!local) {
             const conn = new rtcbot.RTCConnection();
 
 
             conn.video.subscribe(function (stream) {
                 document.querySelector("video").srcObject = stream;
             });
-        }
+        //}
         const speaker = (cmd) => {
             let commands;
             if (typeof cmd === 'string' && cmd.includes(':')) {
@@ -67,9 +67,9 @@
 
             console.log("Ready!");
         }
-        if (!local) {
+       // if (!local) {
             connect();
-        }
+      //  }
         // if a gamepad exists
         let gamepads = [];
         const gpConnected = document.getElementById('pad-connected')
