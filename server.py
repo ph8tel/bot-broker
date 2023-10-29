@@ -20,7 +20,10 @@ def get_script(request):
 def get_script(request):
     
     return web.FileResponse(os.path.join(os.getcwd(), 'controller.html'))
-
+@routes.get("/plow")
+def get_script(request):
+    
+    return web.FileResponse(os.path.join(os.getcwd(), 'ploaController.html'))
 @routes.get("/blower")
 def get_script(request):
     
