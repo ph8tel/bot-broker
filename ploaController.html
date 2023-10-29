@@ -43,10 +43,10 @@
             } else {
                 commands = 'error:incorrect format:' + cmd
             }
-            if (!local) {
+            //if (!local) {
 
                 conn.put_nowait(commands)
-            }
+            //}
             console.log(commands)
         }
 
