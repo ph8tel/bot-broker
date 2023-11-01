@@ -4,6 +4,27 @@ routes = web.RouteTableDef()
 from page_gen import idx, truck, test, controller
 from rtcbot import Websocket, getRTCBotJS
 ws = None # Websocket connection to the robot
+ws_blower = None
+@routes.get("/ws/blower")
+async def websocket_for_blower(request):
+    global ws_blower
+    ws_blower = Websocket(request)
+    print("Robot Connected")
+    await ws_blower  # Wait until the websocket closes
+    print("Robot disconnected")
+    return ws_blower.ws
+# Called by the browser to set up a connection
+@routes.post("/connect-blower")
+async def connect_blower(request):
+    global ws_blower
+    if ws_blower is None:
+        raise web.HTTPInternalServerError("There is no blower connected")
+    clientOffer = await request.json()
+    print('ws is', clientOffer)
+    # Send the offer to the robot, and receive its response
+    ws_blower.put_nowait(clientOffer)
+    robotResponse = await ws_blower.get()
+    return web.json_response(robotResponse)
 @routes.get("/ws")
 async def websocket(request):
     global ws
@@ -27,7 +48,7 @@ def get_script(request):
 @routes.get("/blower")
 def get_script(request):
     
-    return web.FileResponse(os.path.join(os.getcwd(), 'snowBlower.html'))
+    return web.FileResponse(os.path.join(os.getcwd(), 'blowerController.html'))
 
 @routes.get("/car")
 def get_script(request):

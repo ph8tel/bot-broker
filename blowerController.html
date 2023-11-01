@@ -77,7 +77,7 @@
             <button class="status" id="pad-connected">REMOTE</button>
             <button class="status" id="stopped">STOPPED</button>
             <button class="status" id="lights">LIGHTS</button>
-            <button class="status" id="plow">BLADE</button>
+            <button class="status" id="jet">BLOWER</button>
         </div>
 
 
@@ -88,7 +88,6 @@
         const local = false
         const rotate = (degree) =>{
   const needle = document.getElementById("needle");
-  console.log(needle)
   needle.style.transform = "rotate("+degree+"deg)";
   needle.style.webkitTransform = "rotate("+degree+"deg)";
   needle.style.mozTransform = "rotate("+degree+"deg)";
@@ -129,14 +128,6 @@ rotate(0)
             }
         }
         assignControls()
-        const limiter = (value, upper, lower) => {
-            if ( value >= upper) {
-                value = upper
-            } else if ( value <= lower ) {
-                value = lower
-            }
-            return value
-        }
             if (!local) {
                 const conn = new rtcbot.RTCConnection();
 
@@ -147,10 +138,11 @@ rotate(0)
             }
 
             async function connect() {
+                if (!local){
                 let offer = await conn.getLocalDescription();
 
                 // POST the information to /connect
-                let response = await fetch("/connect-truck", {
+                let response = await fetch("/connect-blower", {
                     method: "POST",
                     cache: "no-cache",
                     body: JSON.stringify(offer)
@@ -162,6 +154,7 @@ rotate(0)
                 }
 
                 console.log("Ready!");
+            }
             }
             if (!local) {
                 connect();
@@ -185,7 +178,7 @@ rotate(0)
                 const stoppedButton = document.getElementById('stopped')
                 const padConnectedButton = document.getElementById('pad-connected')
                 const flashersButton = document.getElementById('lights')
-                const plowButton = document.getElementById('plow')
+                const jetButton = document.getElementById('jet')
                 var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
                 var gp = gamepads[0]
                 for (let i = 0; i < gp.buttons.length; i++) {
@@ -206,11 +199,11 @@ rotate(0)
                 }
                 if (gp.buttons[3].pressed) {
                     speaker('button:plow:up')
-                    plowButton.style.visibility = 'hidden'
+                    jetButton.style.visibility = 'hidden'
                 }
                 if (gp.buttons[2].pressed) {
                     speaker('button:plow:down')
-                    plowButton.style.visibility = 'visible'
+                    jetButton.style.visibility = 'visible'
 
                 }
                 if (gp.buttons[15].pressed) {
@@ -270,17 +263,17 @@ rotate(0)
 
                 }
 
-                let steerValue = pwmValueFormatter(gp.axes[0])
+                let steerValue = pwmValueFormatter(gp.axes[0] * -1)
                 if (previousSteer !== steerValue) {
                     speaker('servo:1:' + steerValue)
                     previousSteer = steerValue
                 }
-                let aux1Value = limiter(pwmValueFormatter(gp.axes[2] * -1), 2000, 1000)
+                let aux1Value = pwmValueFormatter(gp.axes[2])
                 if (aux1Value !== previousAux1) {
                     speaker('servo:2:' + aux1Value)
                     previousAux1 = aux1Value
                 }
-                let aux2Value = limiter(pwmValueFormatter(gp.axes[3] * -1), 2000, 1000)
+                let aux2Value = pwmValueFormatter(gp.axes[3] * -1)
                 if (aux2Value !== previousAux2) {
                     speaker('servo:3:' + aux2Value)
                     previousAux2 = aux2Value

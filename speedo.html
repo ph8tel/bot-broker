@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+#speedometer {
+  width: 250px;
+  height: 250px;
+  border: 1px solid black;
+  border-radius: 125px;
+  position: relative;
+}
+
+#needle {
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-bottom: 100px solid red;
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  margin-left: -50px;
+  margin-bottom: -100px;
+  -webkit-transform-origin: 0% 100%;
+  -ms-transform-origin: 0% 100%;
+  transform-origin: 0% 100%;
+}
+</style>
+</head>
+<body>
+
+<h1>Speedometer</h1>
+
+<div id="speedometer">
+  <div id="needle"></div>
+</div>
+
+<script>
+function rotate(degree) {
+  var needle = document.getElementById("needle");
+  needle.style.transform = "rotate("+degree+"deg)";
+  needle.style.webkitTransform = "rotate("+degree+"deg)";
+  needle.style.mozTransform = "rotate("+degree+"deg)";
+  needle.style.msTransform = "rotate("+degree+"deg)";
+  needle.style.oTransform = "rotate("+degree+"deg)";
+}
+
+rotate(45); // rotate needle 45 degrees
+</script>
+ 
+</body>
+</html>

@@ -50,6 +50,14 @@ async def cmnd():
       if command_packet[0] == 'servo':
          pwm.setServoPulse(int(command_packet[1]), int(command_packet[2]))
       if command_packet[0] == 'button':
+        if command_packet[1] == "forward":
+          pwm.setServoPulse(0, 2000)
+        if command_packet[1] == "back":
+          pwm.setServoPulse(0, 700)
+        if command_packet[1] == "left":
+          pwm.setServoPulse(0, 2000)
+        if command_packet[1] == "right":
+          pwm.setServoPulse(0, 700)
 
         if command_packet[1] == "stop":
           pwm.setServoPulse(0, 1500)
