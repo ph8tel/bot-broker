@@ -5,7 +5,7 @@ from page_gen import idx, truck, test, controller
 from rtcbot import Websocket, getRTCBotJS
 ws = None # Websocket connection to the robot
 ws_blower = None
-@routes.get("/ws/blower")
+@routes.get("/ws-blower")
 async def websocket_for_blower(request):
     global ws_blower
     ws_blower = Websocket(request)
