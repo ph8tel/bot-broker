@@ -102,10 +102,10 @@ rotate(0)
                 } else {
                     commands = 'error:incorrect format:' + cmd
                 }
-                if (!local) {
+                // if (!local) {
 
                     conn.put_nowait(commands)
-                }
+                // }
                 console.log(commands)
             }
 
@@ -128,17 +128,17 @@ rotate(0)
             }
         }
         assignControls()
-            if (!local) {
+            // if (!local) {
                 const conn = new rtcbot.RTCConnection();
 
 
                 conn.video.subscribe(function (stream) {
                     document.querySelector("video").srcObject = stream;
                 });
-            }
+            // }
 
             async function connect() {
-                if (!local){
+                // if (!local){
                 let offer = await conn.getLocalDescription();
 
                 // POST the information to /connect
@@ -154,11 +154,11 @@ rotate(0)
                 }
 
                 console.log("Ready!");
+            // }
             }
-            }
-            if (!local) {
+            // if (!local) {
                 connect();
-            }
+            // }
             // if a gamepad exists
             let gamepads = [];
             const gpConnected = document.getElementById('pad-connected')
