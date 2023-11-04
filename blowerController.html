@@ -265,8 +265,8 @@ rotate(0)
                 if (brake.touched) {
                     let brakeVal = pwmValueFormatter(brake.value * -1)
                     speaker('servo:0:' + brakeVal )
-                    document.getElementById('spedo').innerText = brakeVal * -1
-                    rotate((brakeVal * -1) / 7 )
+                    document.getElementById('spedo').innerText = brakeVal 
+                    rotate((brakeVal ) / 7 )
 
                     stopped = false
                     stoppedButton.style.visibility = 'hidden'
@@ -275,8 +275,8 @@ rotate(0)
                     stopped = false
                     stoppedButton.style.visibility = 'hidden'
                     speaker('servo:0:' + + pwmValueFormatter(throttle.value))
-                    document.getElementById('spedo').innerText = pwmValueFormatter(throttle.value)
-                    rotate(pwmValueFormatter(throttle.value) / 7)
+                    document.getElementById('spedo').innerText = pwmValueFormatter(throttle.value * -1)
+                    rotate(pwmValueFormatter(throttle.value * -1) / 7)
 
 
                 } else if (!throttle.touched && !brake.touched && !stopped) {
