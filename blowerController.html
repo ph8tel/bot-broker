@@ -263,7 +263,7 @@ rotate(0)
 
                 }
 
-                let steerValue = pwmValueFormatter(gp.axes[0] * -1)
+                let steerValue = pwmValueFormatter(gp.axes[0] )
                 if (previousSteer !== steerValue) {
                     speaker('servo:1:' + steerValue)
                     previousSteer = steerValue
