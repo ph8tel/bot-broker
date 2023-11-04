@@ -52,28 +52,54 @@
         video {
             margin: auto;
         }
+        #speedometer {
+    
+        position: absolute;
+        
+        left: 10px;
+
+        z-index: 100;
+
+        }
+        .manual {
+            position: absolute;
+            top: 20px;
+            left: 50px;
+            width: 80%;
+            opacity: 33%;
+        }
+        #spedo {
+    
+    position: absolute;
+    color: red;
+    
+    right: 10px;
+
+    z-index: 100;
+
+    }
     </style>
 </head>
 
 <body>
     <div class="centered">
-        <video autoplay playsinline controls heigh="100%" width="100%"></video> <audio autoplay></audio>
-        <div id="spedo">
-            0
-
-        
-            
-        </div>
         <div id="speedometer">
             <div id="needle"></div>
           </div>
+          <div id="spedo">0</div>
+        <video autoplay playsinline controls heigh="100%" width="100%">
+
+        </video> <audio autoplay></audio>
+
+
         <div class="row">
             <button class="ctrl" id="forward">FORWARD</button>
             <button class="ctrl" id="back">BACK</button>
             <button class="ctrl" id="left">LEFT</button>
             <button class="ctrl" id="right">RIGHT</button>
+            
         </div>
-        <div class="row">
+        <div class="row manual">
             <button class="status" id="pad-connected">REMOTE</button>
             <button class="status" id="stopped">STOPPED</button>
             <button class="status" id="lights">LIGHTS</button>
