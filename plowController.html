@@ -236,10 +236,12 @@ rotate(0)
                 let brake = gp.buttons[7]
                 const pwmValueFormatter = (number) => {
                     let formatted = Math.floor(number * 1000) + 1500
-                    if (formatted > 2450) {
-                        formatted = 2500
+                    if (formatted > 2000) {
+                        formatted = 2000
                     } else if (formatted > 1450 && formatted < 1610) {
                         formatted = 1500
+                    } else if ( fomatted < 1000 ) {
+                        formatted = 1000
                     }
                     return formatted
                 }
