@@ -34,6 +34,18 @@ async def connect():
     ws.put_nowait(robotDescription)
     print("Started WebRTC")
     await ws.close()
+turnJet = False
+def turnBlower():
+    global turnJet
+    while turnJet:
+   # setServoPulse(2,2500)
+      for i in range(700,2200,100):  
+        pwm.setServoPulse(5,i)   
+        time.sleep(0.02)     
+        
+      for i in range(2200,700,-100):
+        pwm.setServoPulse(5,i) 
+        time.sleep(0.02)
 
 throttle = 600
 def validator(num, upper=2500, lower=500):
@@ -45,10 +57,21 @@ def validator(num, upper=2500, lower=500):
 
 def incrementer(cmd):
     global throttle
+    global turnJet
     if cmd == 'up':
-        throttle = validator(throttle + 300)
+        throttle = validator(throttle + 100)
+        pwm.setServoPulse(5, throttle)
+
     if cmd == 'down':
-        throttle = validator(throttle - 300)
+        throttle = validator(throttle - 100)
+        pwm.setServoPulse(5, throttle)
+
+    if cmd == 'left':
+        turnJet = False
+    if cmd == 'right':
+        turnJet = True
+
+
     print(throttle)
     return throttle
         
@@ -59,7 +82,12 @@ async def cmnd():
       
 
       if commands[0] == 'button' and commands[1]== 'dpad':
-          pwm.setServoPulse(5, incrementer(commands[2]))
+          incrementer(commands[2])
+      if commands[0] == 'button' and commands[1]== 'plow':
+          if commands[2] == 'up':
+              pwm.setServoPulse(5, 2000)
+          if commands[2] == 'down':
+              pwm.setServoPulse(5, 1000)
       if commands[0] == 'servo':
           pwm.setServoPulse(int(commands[1]), int(commands[2]))
           
@@ -81,9 +109,10 @@ async def cmnd():
       elif msg == "right":
           pwm.setServoPulse(1, 1800)
       elif msg == "lightson":
-          pwm.setServoPulse(2, 500)
+          pwm.setServoPulse(4, 500)
           time.sleep(.1)
-          pwm.setServoPulse(2, 2500)
+          pwm.setServoPulse(4, 2500)
+    
 
          
 

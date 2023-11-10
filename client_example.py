@@ -1,18 +1,18 @@
 import asyncio
 from rtcbot import Websocket, RTCConnection, PiCamera
 # from chassis import Tank
-import time
-from PCA9685 import PCA9685
-import time
-pwm = PCA9685(0x40)
-pwm.setPWMFreq(50)
+# import time
+# from PCA9685 import PCA9685
+# import time
+# pwm = PCA9685(0x40)
+# pwm.setPWMFreq(50)
 
-Pos0 = 1500
-Pos1 = 1500
-pwm.setServoPulse(0, 1500)  # throttle nuetral
-pwm.setServoPulse(1, 1500)  # steering middle
-pwm.setServoPulse(4, 500)  # lights off
-pwm.setServoPulse(2, 2500)  # plow up
+# Pos0 = 1500
+# Pos1 = 1500
+# pwm.setServoPulse(0, 1500)  # throttle nuetral
+# pwm.setServoPulse(1, 1500)  # steering middle
+# pwm.setServoPulse(4, 500)  # lights off
+# pwm.setServoPulse(2, 2500)  # plow up
 
 cam = PiCamera()
 conn = RTCConnection()
@@ -39,39 +39,39 @@ async def connect():
 def controller_movement(moves):
     servo_to_move = abs(int(moves[1]) - 1)
     print('move', moves[2], servo_to_move)
-    pwm.setServoPulse(servo_to_move, int(moves[2]))
+    #pwm.setServoPulse(servo_to_move, int(moves[2]))
 
 
 async def cmnd():
     while True:
       msg = await conn.get()
       print("got", msg)
-      command_packet = msg.split(':')
-      if command_packet[0] == 'servo':
-         pwm.setServoPulse(int(command_packet[1]), int(command_packet[2]))
-      if command_packet[0] == 'button':
-        if command_packet[1] == "forward":
-          pwm.setServoPulse(0, 2000)
-        if command_packet[1] == "back":
-          pwm.setServoPulse(0, 700)
-        if command_packet[1] == "left":
-          pwm.setServoPulse(0, 2000)
-        if command_packet[1] == "right":
-          pwm.setServoPulse(0, 700)
+      # command_packet = msg.split(':')
+      # if command_packet[0] == 'servo':
+      #    #pwm.setServoPulse(int(command_packet[1]), int(command_packet[2]))
+      # if command_packet[0] == 'button':
+      #   if command_packet[1] == "forward":
+      #     pwm.setServoPulse(0, 2000)
+      #   if command_packet[1] == "back":
+      #     pwm.setServoPulse(0, 700)
+      #   if command_packet[1] == "left":
+      #     pwm.setServoPulse(0, 2000)
+      #   if command_packet[1] == "right":
+      #     pwm.setServoPulse(0, 700)
 
-        if command_packet[1] == "stop":
-          pwm.setServoPulse(0, 1500)
-          pwm.setServoPulse(1, 1500)
-        elif command_packet[1] == "lights":
-          print('lights setting')
-          pwm.setServoPulse(4, 500)
-          time.sleep(.1)
-          pwm.setServoPulse(4, 2500)
-        if command_packet[1] == "plow":
-            if command_packet[2] == 'up':
-               pwm.setServoPulse(2, 2500)
-            if command_packet[2] == 'down':
-              pwm.setServoPulse(2, 500)
+      #   if command_packet[1] == "stop":
+      #     pwm.setServoPulse(0, 1500)
+      #     pwm.setServoPulse(1, 1500)
+      #   elif command_packet[1] == "lights":
+      #     print('lights setting')
+      #     pwm.setServoPulse(4, 500)
+      #     time.sleep(.1)
+      #     pwm.setServoPulse(4, 2500)
+      #   if command_packet[1] == "plow":
+      #       if command_packet[2] == 'up':
+      #          pwm.setServoPulse(2, 2500)
+      #       if command_packet[2] == 'down':
+      #         pwm.setServoPulse(2, 500)
       
          
 

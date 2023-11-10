@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>yardbot</title>
+    <script src="/rtcbot.js"></script>
+    <style>
+        #speedometer {
+  width: 30px;
+  height: 30px;
+  border: 1px solid black;
+  border-radius: 125px;
+  position: relative;
+}
+
+#needle {
+  width: 0;
+  height: 60px;
+  border-left: 2px solid transparent;
+  border-right: 1px solid transparent;
+  border-bottom: 10px solid red;
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  /* margin-left: -50px;
+  margin-bottom: -100px; */
+  -webkit-transform-origin: 0% 100%;
+  -ms-transform-origin: 0% 100%;
+  transform-origin: 0% 100%;
+}
+        .centered {
+            width: 100%;
+        }
+
+        button {
+            width: 23%;
+        }
+
+        row {
+            display: inline-flex;
+        }
+
+        .ctrl {
+            background-color: blue;
+        }
+        .status {
+            visibility: hidden;
+        }
+
+        video {
+            margin: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="centered">
+        <video autoplay playsinline controls heigh="100%"></video> <audio autoplay></audio>
+        <div id="spedo">
+            0
+
+        
+            
+        </div>
+        <div id="speedometer">
+            <div id="needle"></div>
+          </div>
+        <div class="row">
+            <button class="ctrl" id="forward">FORWARD</button>
+            <button class="ctrl" id="back">BACK</button>
+            <button class="ctrl" id="left">LEFT</button>
+            <button class="ctrl" id="right">RIGHT</button>
+        </div>
+        <div class="row">
+            <button class="status" id="pad-connected">REMOTE</button>
+            <button class="status" id="stopped">STOPPED</button>
+            <button class="status" id="lights">LIGHTS</button>
+            <button class="status" id="plow">BLADE</button>
+        </div>
+
+
+
+
+    </div>
+    <script>
+
+        const rotate = (degree) =>{
+  const needle = document.getElementById("needle");
+  console.log(needle)
+  needle.style.transform = "rotate("+degree+"deg)";
+  needle.style.webkitTransform = "rotate("+degree+"deg)";
+  needle.style.mozTransform = "rotate("+degree+"deg)";
+  needle.style.msTransform = "rotate("+degree+"deg)";
+  needle.style.oTransform = "rotate("+degree+"deg)";
+}
+rotate(0)
+        const speaker = (cmd) => {
+                let commands;
+                if (typeof cmd === 'string' && cmd.includes(':')) {
+                    commands = cmd
+                } else {
+                    commands = 'error:incorrect format:' + cmd
+                }
+    
+
+                    conn.put_nowait(commands)
+         
+                console.log(commands)
+            }
+
+        const controlButtonClick = (e) => {
+            document.getElementById('stopped').style.visibility = 'hidden'
+            speaker('button:' + e?.target?.id + ':pressed');
+        }
+        const controlButtonRelease = (e) => {
+            document.getElementById('stopped').style.visibility = 'visible'
+            stopped = true
+            speaker('button:stop:stop')
+        }
+        const assignControls = () => {
+            const controllButtons = document.getElementsByClassName('ctrl') || []
+            for (let i = 0; i < controllButtons.length; i++) {
+                controllButtons[i].addEventListener("mousedown", controlButtonClick, { passive: true })
+                controllButtons[i].addEventListener("mouseup", controlButtonRelease, { passive: true })
+                controllButtons[i].addEventListener("touchstart", controlButtonClick, { passive: true })
+                controllButtons[i].addEventListener("touchend", controlButtonRelease, { passive: true })
+            }
+        }
+        assignControls()
+        const limiter = (value, upper, lower) => {
+            if ( value >= upper) {
+                value = upper
+            } else if ( value <= lower ) {
+                value = lower
+            }
+            return value
+        }
+
+                const conn = new rtcbot.RTCConnection();
+
+
+                conn.video.subscribe(function (stream) {
+                    document.querySelector("video").srcObject = stream;
+                });
+      
+
+            async function connect() {
+                let offer = await conn.getLocalDescription();
+
+                // POST the information to /connect
+                let response = await fetch("/connect-truck", {
+                    method: "POST",
+                    cache: "no-cache",
+                    body: JSON.stringify(offer)
+                });
+                if (response.bot_available === 'no') {
+                    return connect()
+                } else {
+                    await conn.setRemoteDescription(await response.json());
+                }
+
+                console.log("Ready!");
+            }
+     
+                connect();
+    
+            // if a gamepad exists
+            let gamepads = [];
+            const gpConnected = document.getElementById('pad-connected')
+            let intervlId, aliveIntervalId
+            let movements = [0, 0]
+            let previousSteer = 0
+            let previousAux1 = 0
+            let previousAux2 = 0
+            let stopped
+            let currentPositions = []
+            const toggler = (element) => {
+                const visibility = element.style?.visibility === 'visible' ? 'hidden' : 'visible';
+                element.style.visibility = visibility
+
+            }
+            let poll_tango = async () => {
+                const stoppedButton = document.getElementById('stopped')
+                const padConnectedButton = document.getElementById('pad-connected')
+                const flashersButton = document.getElementById('lights')
+                const plowButton = document.getElementById('plow')
+                var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+                var gp = gamepads[0]
+                for (let i = 0; i < gp.buttons.length; i++) {
+                    if (gp.buttons[i].pressed) {
+                        console.log(i, ' pressed')
+                    }
+                }
+
+
+                if (gp.buttons[0].pressed) {
+                    speaker('button:stop:stop')
+                    currentPosition = 1500
+                    toggler(stoppedButton)
+                }
+                if (gp.buttons[1].pressed) {
+                    speaker('button:lights:lights')
+                    toggler(flashersButton)
+                }
+                if (gp.buttons[3].pressed) {
+                    speaker('button:plow:up')
+                    plowButton.style.visibility = 'hidden'
+                }
+                if (gp.buttons[2].pressed) {
+                    speaker('button:plow:down')
+                    plowButton.style.visibility = 'visible'
+
+                }
+                if (gp.buttons[15].pressed) {
+                    speaker('button:dpad:right')
+                }
+                if (gp.buttons[12].pressed) {
+                    speaker('button:dpad:up')
+                }
+                if (gp.buttons[14].pressed) {
+                    speaker('button:dpad:left')
+                }
+                if (gp.buttons[13].pressed) {
+                    speaker('button:dpad:down')
+                }
+                if (gp.buttons[4].pressed) {
+                    speaker('button:top:left')
+                }
+                if (gp.buttons[5].pressed) {
+                    speaker('button:top:right')
+                }
+
+                let throttle = gp.buttons[6]
+                let brake = gp.buttons[7]
+                const pwmValueFormatter = (number) => {
+                    let formatted = Math.floor(number * 1000) + 1500
+                    if (formatted > 2450) {
+                        formatted = 2500
+                    } else if (formatted > 1450 && formatted < 1610) {
+                        formatted = 1500
+                    }
+                    return formatted
+                }
+                if (brake.touched) {
+                    let brakeVal = pwmValueFormatter(brake.value * -1)
+                    speaker('servo:0:' + brakeVal )
+                    document.getElementById('spedo').innerText = brakeVal
+                    rotate(brakeVal / 7 )
+
+                    stopped = false
+                    stoppedButton.style.visibility = 'hidden'
+                }
+                else if (throttle.touched && !brake.touched) {
+                    stopped = false
+                    stoppedButton.style.visibility = 'hidden'
+                    speaker('servo:0:' + + pwmValueFormatter(throttle.value))
+                    document.getElementById('spedo').innerText = pwmValueFormatter(throttle.value)
+                    rotate(pwmValueFormatter(throttle.value) / 7)
+
+
+                } else if (!throttle.touched && !brake.touched && !stopped) {
+                    stopped = true
+                    stoppedButton.style.visibility = 'visible'
+                    document.getElementById('spedo').innerText = '0'
+
+                    rotate(180)
+                    speaker('servo:0:1500')
+
+                }
+
+                let steerValue = pwmValueFormatter(gp.axes[0])
+                if (previousSteer !== steerValue) {
+                    speaker('servo:1:' + steerValue)
+                    previousSteer = steerValue
+                }
+                let aux1Value = limiter(pwmValueFormatter(gp.axes[2] * -1), 2000, 1000)
+                if (aux1Value !== previousAux1) {
+                    speaker('servo:2:' + aux1Value)
+                    previousAux1 = aux1Value
+                }
+                let aux2Value = limiter(pwmValueFormatter(gp.axes[3] * -1), 2000, 1000)
+                if (aux2Value !== previousAux2) {
+                    speaker('servo:3:' + aux2Value)
+                    previousAux2 = aux2Value
+                }
+
+            }
+
+
+            function gamepadHandler(event, connecting) {
+                const gamepad = event.gamepad;
+                console.log("Gamepad connected", event)
+
+
+                gpConnected.style.backgroundColor = 'green'
+
+                //start the show
+                intervalId = setInterval(poll_tango, 75)
+                aliveIntervalId = setInterval(() => speaker('system:stayinalive:idle'), 30000)
+                // Note:
+                // gamepad === navigator.getGamepads()[gamepad.index]
+
+                if (connecting) {
+                    gamepads.push(gamepad);
+                } else {
+                    gamepads.pop();
+                }
+                const padConnectedButton = document.getElementById('pad-connected')
+
+                toggler(padConnectedButton)
+
+            }
+
+            function GamepadDisconector(event) {
+                //cancel interval
+                clearInterval(intervalId)
+                gamepads.pop()
+                gpConnected.style.backgroundColor = 'red'
+                gpConnected.innerText = 'PAD NOT CONNECTED'
+            }
+
+            window.addEventListener("gamepadconnected", function (e) { gamepadHandler(e, true); }, false);
+            window.addEventListener("gamepaddisconnected", function (e) { GamepadDisconector(e); }, false);
+
+    </script>
+
+</body>
+
+</html>
