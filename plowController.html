@@ -135,6 +135,30 @@ rotate(0)
             }
         }
         assignControls()
+        let currentPositions = [
+    1500,
+    1500,
+    1500,
+    1500
+]
+
+const servoTracker = (movement, servo) => {
+    movement = Number(movement)
+    //  console.log('moving, current pos1', currentPositions[0], ' servo2: ', currentPositions[1] , ' servo to move: ', servo, ' amount: ', movement)
+    let adjustedPostion;
+
+
+    if ((movement + currentPositions[servo]) > 2000) {
+        adjustedPostion = 2000;
+    } else if ((movement + currentPositions[servo]) < 1000) {
+        adjustedPostion = 1000;
+    } else {
+        adjustedPostion = movement += currentPositions[servo]
+    }
+    currentPositions[servo] = adjustedPostion
+    return adjustedPostion;
+
+};
         const limiter = (value, upper, lower) => {
             if ( value >= upper) {
                 value = upper
@@ -181,7 +205,7 @@ rotate(0)
             let previousAux1 = 0
             let previousAux2 = 0
             let stopped
-            let currentPositions = []
+            
             const toggler = (element) => {
                 const visibility = element.style?.visibility === 'visible' ? 'hidden' : 'visible';
                 element.style.visibility = visibility
@@ -285,12 +309,12 @@ rotate(0)
                 }
                 let aux1Value = limiter(pwmValueFormatter(gp.axes[2] * -1), 2000, 1000)
                 if (aux1Value !== previousAux1) {
-                    speaker('servo:2:' + aux1Value)
+                    speaker('servo:2:' + servoTracker(aux1Value))
                     previousAux1 = aux1Value
                 }
                 let aux2Value = limiter(pwmValueFormatter(gp.axes[3] * -1), 2000, 1000)
                 if (aux2Value !== previousAux2) {
-                    speaker('servo:3:' + aux2Value)
+                    speaker('servo:3:' + servoTracker(aux2Value))
                     previousAux2 = aux2Value
                 }
 
