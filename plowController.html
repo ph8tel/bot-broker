@@ -314,7 +314,7 @@ const servoTracker = (movement, servo) => {
                 }
                 let aux2Value = limiter(pwmValueFormatter(gp.axes[3] * -1), 2000, 1000)
                 if (aux2Value !== previousAux2) {
-                    speaker(`servo:3:${servoTracker(aux2Value), 3}`)
+                    speaker(`servo:3:${servoTracker(aux2Value, 3)}`)
                     previousAux2 = aux2Value
                 }
 
