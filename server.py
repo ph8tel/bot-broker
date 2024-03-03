@@ -54,7 +54,14 @@ def get_script(request):
 def get_script(request):
     
     return web.FileResponse(os.path.join(os.getcwd(), 'carControllerc.html'))
-
+@routes.get("/active")
+def get_active():
+   
+    global ws
+    if ws is None:
+         return web.json_response({"message": "not_ready"})
+    else:
+        return web.json_response({"message": "ready"})
 # Called by the browser to set up a connection
 @routes.post("/connect")
 async def connect(request):
