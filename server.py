@@ -61,11 +61,14 @@ def get_test(request):
 @routes.get("/active")
 def get_active(request):
    
+    global ws_blower
     global ws
-    if ws is None:
-         return web.json_response({"message": "not_ready"})
+    if ws_blower:
+         return web.json_response({"message": "ready", "drone": "car"})
+    elif ws:
+         return web.json_response({"message": "ready", "drone": "tank"})
     else:
-        return web.json_response({"message": "ready"})
+        return web.json_response({"message":"not_ready"})
 # Called by the browser to set up a connection
 @routes.post("/connect")
 async def connect(request):
