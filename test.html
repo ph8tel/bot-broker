@@ -4,18 +4,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>No Robots Connected</title>
+<title>Connect to robot</title>
 </head>
 <body>
   <div id="status">No robots connected</div>
   
   <script>
     function getStatus() {
-      fetch('https://bot-broker.herokuapp.com/active')
+      fetch('/active')
         .then(response => response.json())
         .then(data => {
           if (data.message === 'ready') {
-            document.getElementById('status').innerHTML = '<a href="/blower">Connect</a>';
+            document.getElementById('status').innerHTML = '<a href="/blower">Connect to FPV car</a>';
           } else {
             setTimeout(getStatus, 1000); // Retry after 1 second
           }

@@ -54,6 +54,10 @@ def get_script(request):
 def get_script(request):
     
     return web.FileResponse(os.path.join(os.getcwd(), 'carControllerc.html'))
+@routes.get("/test")
+def get_test(request):
+    return web.FileResponse(os.path.join(os.getcwd(), 'test.html'))
+
 @routes.get("/active")
 def get_active(request):
    
