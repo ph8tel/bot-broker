@@ -1,5 +1,6 @@
 from aiohttp import web
 import os
+
 routes = web.RouteTableDef()
 from page_gen import idx, truck, test, controller
 from rtcbot import Websocket, getRTCBotJS
@@ -24,6 +25,7 @@ async def connect_blower(request):
     # Send the offer to the robot, and receive its response
     ws_blower.put_nowait(clientOffer)
     robotResponse = await ws_blower.get()
+    ws_blower = None
     return web.json_response(robotResponse)
 @routes.get("/ws")
 async def websocket(request):
