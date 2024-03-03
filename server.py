@@ -55,7 +55,7 @@ def get_script(request):
     
     return web.FileResponse(os.path.join(os.getcwd(), 'carControllerc.html'))
 @routes.get("/active")
-def get_active():
+def get_active(request):
    
     global ws
     if ws is None:
