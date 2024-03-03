@@ -86,9 +86,7 @@ async def rtcbotjs(request):
 
 @routes.get("/")
 async def index(request):
-    return web.Response(
-        content_type="text/html",
-        text=idx,)
+    return web.FileResponse(os.path.join(os.getcwd(), 'index.html'))
 @routes.get("/tank")
 async def tank(request):
     return web.Response(

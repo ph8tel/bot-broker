@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joe's Robots</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+    select {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #fff;
+        color: #333;
+        font-size: 16px;
+    }
+    select:focus {
+        outline: none;
+        border-color: #66afe9;
+        box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>Joe's Robots</h1>
+    <select name="category" id="category">
+        <option value="SPACE">SPACE</option>
+
+        <option value="LAND">LAND</option>
+
+        <option value="AIR">AIR</option>
+        <option value="SEA">SEA</option>
+    </select>
+    <select name="robots" id="robots">
+        <!-- Options will be populated dynamically based on selection -->
+    </select>
+</div>
+<script>
+    const categorySelect = document.getElementById('category');
+    const robotsSelect = document.getElementById('robots');
+    
+    categorySelect.addEventListener('change', populateRobots);
+    robotsSelect.addEventListener('change', redirectToPage);
+    function populateRobots() {
+        const category = categorySelect.value;
+        robotsSelect.innerHTML = ''; // Clear previous options
+        const createOptions = (robots) => {
+           robots.forEach(robot => {
+                    const option = document.createElement('option');
+                    option.value = robot;
+                    option.id = robot;
+                    option.textContent = robot;
+
+                    robotsSelect.appendChild(option);
+                });
+        }
+        switch(category) {
+            case 'AIR':
+                const airRobots = ['HEAVY LIFT HEXICOPTER', 'SAR CELL TOWER', 'HUNTER SEEKER']
+                createOptions(airRobots)
+                break;
+            case 'SEA':
+                const seaRobots = ['HYDROFOIL #3', 'DIVE #1', 'SAIL #3']
+                createOptions(seaRobots)
+                break;
+            case 'LAND':
+                // Populate options for LAND
+                const landRobots = ['SNOW PLOW','CAR', 'LEAF BLOWER'];
+                createOptions(landRobots)
+                break;
+            case 'SPACE':
+                createOptions['NONE REGISTERED']
+                break;
+            default:
+                break;
+        }
+    }
+    function redirectToPage(event) {
+        const category = categorySelect.value;
+        const selectedRobot = robotsSelect.value;
+        console.log('csdfs')
+        if (category === 'LAND' && selectedRobot === 'CAR') {
+            window.location.href = '/blower';
+        }
+    }
+</script>
+</body>
+</html>
