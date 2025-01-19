@@ -126,9 +126,8 @@ async def cleanup(app=None):
 app = web.Application()
 app.add_routes(routes)
 app.on_shutdown.append(cleanup)
-
-# web.run_app(app, path="0.0.0.0", port=os.environ["PORT"])  
+# print(int(os.environ["PORT"]))
+web.run_app(app, path="0.0.0.0", port=int(os.environ["PORT"]))  
 # web.run_app(app)
-web.run_app(app, port=8080)  
 
 
