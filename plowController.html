@@ -314,7 +314,7 @@ const servoTracker = (movement, servo) => {
                     previousSteer = steerValue
                 }
                 let plowValue = pwmValueFormatter(gp.axes[0] * -1)
-                if (previousPlow !== plowValue) {
+                if (Math.abs(previousPlow - plowValue) > 2) {
                     speaker('servo:2:' + plowValue)
                     previousPlow = plowValue
                 }
